@@ -10,12 +10,12 @@ class Context {
     init(options) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let request = rest.get(options.discoveryAddress)
-                .header('Accept', 'application/json')
-                .type("json")
-                .send();
-            
             try {
+                let request = rest.get(options.discoveryAddress)
+                    .header('Accept', 'application/json')
+                    .type("json")
+                    .send();
+            
                 this.sendRequest(request).then(function (response) {
                     if (response.ok) {
                         var info = response.body;
