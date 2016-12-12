@@ -13,8 +13,7 @@ class Context {
             try {
                 let request = rest.get(options.discoveryAddress)
                     .header('Accept', 'application/json')
-                    .type("json")
-                    .send();
+                    .type("json");
             
                 this.sendRequest(request).then(function (response) {
                     if (response.ok) {
