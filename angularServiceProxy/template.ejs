@@ -1,0 +1,145 @@
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Observable } from 'rxjs';
+
+// Models
+<% for(let model of schemas) { %>
+/**
+* <%= model.description %>
+*/
+export class <%= model.name%> {
+<% for(let prop of model.properties) {
+    if(prop.description) { _%>
+    /**
+    * <%= prop.description %>
+    */
+    <%_ }
+    <%= prop.name%>: <%= prop.type %>;
+<%} -%>
+}
+<%}%>
+
+// Service proxy
+export class <%= normalizeService(serviceName) %> {
+   
+    constructor(private baseUrl: string) {
+    }
+
+    protected abstract httpOptions(): RequestOptions;
+
+  protected sendAction<T>(verb: string, data): Observable<T> {
+        return this.http
+            .post(this.baseUrl + verb, data, this.jwt())
+            .map((response: Response) => {
+                if(response.status != 200) {
+                    return this.handleError(response);
+                }
+                let res = <VulcainResponse<T>>response.json();
+                if(res && res.error) {
+                    const error = res.error;
+                    console.log(error);
+                    return Observable.throw(error);
+                }                
+                return res && res.value;
+            })
+            .do(data => console.log(data))
+            .catch(this.handleError);
+    }
+
+    protected query<T>(verb: string, query?, page?: number, maxByPage?:number): Observable<T> {
+        return this.http
+            .get(this.baseUrl + verb, this.jwt())
+            .map((response: Response) => {
+                if(response.status != 200) {
+                    return this.handleError(response);
+                }
+                let res = <VulcainResponse<T>>response.json();
+                if(res && res.error) {
+                    const error = res.error;
+                    console.log(error);
+                    return Observable.throw(error);
+                }                
+                return res && res.value;
+            })
+            .do(data => console.log(data))
+            .catch(this.handleError);
+    }
+
+    protected get<T>(schema: string, id: string): Observable<T> {
+        return this.http
+            .get(this.baseUrl + schema + ".get/" + id, this.jwt())
+            .map((response: Response) => {
+                if(response.status != 200) {
+                    return this.handleError(response);
+                }
+                let res = <VulcainResponse<T>>response.json();
+                if(res && res.error) {
+                    const error = res.error;
+                    console.log(error);
+                    return Observable.throw(error);
+                }
+                return res && res.value;
+            })
+            .do(data => console.log(data))
+            .catch(this.handleError);
+    }
+
+    protected handleError(error: Response) {
+        console.error(error);
+        let msg = {status: error.status, message:`Error status code ${error.status} at ${error.url}`};
+        return Observable.throw(msg);
+    }
+
+<% for(let method of services) {
+    let p = arguments(method);
+    if( method.kind == "action") { %>
+    /**
+    * Action: <%= method.description %>
+    * @params {<%= method.outputSchema||"any" %>} data 
+    */
+    <%=normalizeMethod(method.verb)%>( data: <%=method.outputSchema||"any"%>): Observable<<%=method.outputSchema||"any"%>> {
+        let response = this.sendAction<<%=method.outputSchema||"any"%>>("<%=method.verb%>", data);
+        return response;
+    }
+    <% } else if( method.kind === "get" ) { %>
+    /**
+    * <%= method.description || "Get" %>
+    * @params id string - unique id
+    */
+    get<%=method.outputSchema%>(id: string): Observable<<%=method.outputSchema||"any"%>> {
+        let response = this.get<<%=method.outputSchema||"any"%>>("<%=method.verb%>", id);
+        return response;
+    }
+    <% } else if(method.kind === "query" && method.action === "all") {
+        if(p.params.length > 0)
+            p.params.push(", ");
+    %>
+    /**
+    * <%= method.description || "Get all" %>
+    <%_ for(let p of getInputProperties(method)) { _%>
+    * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
+    <%_ } _%>
+    * @params {number} page - Page to retrieve
+    * @params {number} maxByPage - Item by page (default 100)
+    */
+    getAll<%=method.outputSchema%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
+        let response =this.query<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+        return response;
+    }
+    <% } else {
+        if(p.params.length > 0)
+            p.params.push(", ");
+    %>
+    /**
+    * Query: <%= method.description %>
+    <%_ for(let p of getInputProperties(method)) { _%>
+    * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
+    <%_ } _%>
+    */
+    <%=normalizeMethod(method.verb)%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
+
+        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+        return response;
+    }
+<% }
+}%>
+}

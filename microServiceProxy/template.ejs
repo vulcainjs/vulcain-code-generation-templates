@@ -100,7 +100,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
     */
-    async <%=normalizeMethod(method.verb)%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number): : Promise< <%=method.outputSchema||"any"%>[] > {
+    async <%=normalizeMethod(method.verb)%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number): Promise< <%=method.outputSchema||"any"%>[] > {
         let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
         let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("query", <%= normalizeService(serviceName) %>.serviceName, <%= normalizeService(serviceName) %>.serviceVersion, "<%=method.verb%>", this.userContext, <%=p.args%>, page, maxByPage);
         return response.values;
