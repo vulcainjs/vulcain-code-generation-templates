@@ -1,6 +1,15 @@
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 
+export interface VulcainResponse<T> {
+    value: T;
+    status: "Success" | "Error" | "Pending";
+    error?: {
+        message: string;
+        errors?: Array<{message: string}>;
+    }
+}
+
 // Models
 <% for(let model of schemas) { %>
 /**
@@ -19,16 +28,16 @@ export class <%= model.name%> {
 <%}%>
 
 // Service proxy
-export class <%= normalizeService(serviceName) %> {
+export abstract class <%= normalizeService(serviceName) %> {
    
-    constructor(private baseUrl: string) {
+    constructor(protected http: Http, private baseUrl: string) {
     }
 
     protected abstract httpOptions(): RequestOptions;
 
   protected sendAction<T>(verb: string, data): Observable<T> {
         return this.http
-            .post(this.baseUrl + verb, data, this.jwt())
+            .post(this.baseUrl + verb, data, this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -47,7 +56,7 @@ export class <%= normalizeService(serviceName) %> {
 
     protected query<T>(verb: string, query?, page?: number, maxByPage?:number): Observable<T> {
         return this.http
-            .get(this.baseUrl + verb, this.jwt())
+            .get(this.baseUrl + verb, this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -58,7 +67,7 @@ export class <%= normalizeService(serviceName) %> {
                     console.log(error);
                     return Observable.throw(error);
                 }                
-                return res && res.value;
+                return {values: res && res.value, page};
             })
             .do(data => console.log(data))
             .catch(this.handleError);
@@ -66,7 +75,7 @@ export class <%= normalizeService(serviceName) %> {
 
     protected get<T>(schema: string, id: string): Observable<T> {
         return this.http
-            .get(this.baseUrl + schema + ".get/" + id, this.jwt())
+            .get(this.baseUrl + schema + ".get/" + id, this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -137,7 +146,7 @@ export class <%= normalizeService(serviceName) %> {
     */
     <%=normalizeMethod(method.verb)%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
 
-        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+        let response = this.query<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
         return response;
     }
 <% }
