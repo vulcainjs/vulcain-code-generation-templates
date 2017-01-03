@@ -97,7 +97,7 @@ class Context {
         let schemaName = method.inputSchema;
         if (!schemaName) {
             if (method.action === "all")
-                return { params: ["query?: any"], args: "query" };
+                return { params: ["query?: any, "], args: "query" };
             return { params: [], args: "null" };
         }
         let schema = this.schemas.find(s => s.name === schemaName);
