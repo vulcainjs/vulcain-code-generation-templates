@@ -15,12 +15,13 @@ interface VulcainResponse<T> {
 /**
 * <%= model.description %>
 */
-export class <%= model.name%> {
+export class <%= model.name%> { 
 <% for(let prop of model.properties) {
     if(prop.description) { _%>
     /**
     * <%= prop.description %>
     */
+  <%} -%>    
     <%= prop.name%>: <%= prop.type %>;
 <%} -%>
 }
