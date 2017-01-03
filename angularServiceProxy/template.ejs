@@ -147,9 +147,9 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T>;        
     <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
         let p: <%= method.inputSchema %>;
-        if( <%=p.fullParams[0]%> instanceof <%= method.inputSchema %>) {
-            p = <%=p.fullParams[0]%>;
-            args = <%=p.fullParams[1]%>;
+        if( <%=p.paramNames[0]%> instanceof <%= method.inputSchema %>) {
+            p = <%=p.paramNames[0]%>;
+            args = <%=p.paramNames[1]%>;
         }
         else {
             p = <%=p.args%>;        

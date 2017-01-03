@@ -105,6 +105,7 @@ class Context {
             return { params: ["id: string"], args: "null" };
         }
 
+        let paramNames = [];
         let fullParams = [];
         let params = [];
         let args = "{";
@@ -122,6 +123,7 @@ class Context {
             else {
                 fullParams.push(prop.name + this.required(prop) + ": " + prop.type);                
             }
+            paramNames.push(prop.name);
             params.push(prop.name + this.required(prop) + ": " + prop.type);
             if (prop.name === "id" && method.kind === "get")
                 continue;
@@ -137,7 +139,7 @@ class Context {
             params.push(", ");
             fullParams.push(", ");
         }
-        return { params, args, fullParams };
+        return { params, args, fullParams, paramNames };
     }
 }
 
