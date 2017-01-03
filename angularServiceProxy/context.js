@@ -121,7 +121,7 @@ class Context {
                 fullParams.push(prop.name + this.required(prop) + ": " + prop.type + "|any");
             }
             else {
-                fullParams.push(prop.name + this.required(prop) + ": " + prop.type);                
+                fullParams.push(prop.name  + "?: " + prop.type);                
             }
             paramNames.push(prop.name);
             params.push(prop.name + this.required(prop) + ": " + prop.type);

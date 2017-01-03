@@ -143,7 +143,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ } -%>
     */
 <%_ if( method.inputSchema) { _%>
-    <%=normalizeMethod(method.verb)%><T>(data: T, args?): Observable<T>;
+    <%=normalizeMethod(method.verb)%><T>(data: <%= method.inputSchema %>, args?): Observable<T>;
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T>;        
     <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
         let p: <%= method.inputSchema %>;
