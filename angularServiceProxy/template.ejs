@@ -28,7 +28,7 @@ export class <%= model.name%> {
 <%}%>
 
 // Service proxy
-export class <%= normalizeService(serviceName) %> {
+export abstract class <%= normalizeService(serviceName) %> {
 
     constructor(public http: Http, protected baseUrl: string) {
     }
@@ -151,8 +151,9 @@ export class <%= normalizeService(serviceName) %> {
     * <%= method.description || "Get" %>
     * @params id string - unique id
     */
-    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?): Observable<T> {
-        let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%>): Observable<T> {
+
+        let response = this.get<T>("<%=method.verb%>", id, <%=p.args%>);
         return response;
     }
     <% } else if(method.kind === "query" && method.action === "all") {

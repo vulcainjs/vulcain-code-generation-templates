@@ -102,16 +102,20 @@ class Context {
         }
         let schema = this.schemas.find(s => s.name === schemaName);
         if (!schema) { // get
-            return { params: ["id: string, "], args: "id" };
+            return { params: ["id: string"], args: "null" };
         }
         let params = [];
         let args = "{";
         for (let prop of schema.properties) {
             if (params.length > 0) {
                 params.push(", ");
-                args += ", ";
             }
             params.push(prop.name + this.required(prop) + ": " + prop.type);
+            if(prop.name==="id" && method.kind === "get")
+                continue;
+            if(args.length > 1) {
+                args += ", ";
+            }
             args += prop.name
         }
         args += "}";
