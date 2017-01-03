@@ -145,8 +145,8 @@ export abstract class <%= normalizeService(serviceName) %> {
     */
 <%_ if( method.inputSchema) { _%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let data = <%=p.args%>;        
-        return this.<%=normalizeMethod(method.verb)%>Entity<T>(data, args);
+        let _data = <%=p.args%>;        
+        return this.<%=normalizeMethod(method.verb)%>Entity<T>(_data, args);
     }
 
     /**
@@ -155,7 +155,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     * @params [optional] args - additional url parameters    
     */     
     <%=normalizeMethod(method.verb)%>Entity<T>(data: <%= method.inputSchema %>, args?): Observable<T> {
-        return this.<%=normalizeMethod(method.verb)%><T>("<%=method.verb%>", data, args);     
+        return this.sendAction<T>("<%=method.verb%>", data, args);     
     }    
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
