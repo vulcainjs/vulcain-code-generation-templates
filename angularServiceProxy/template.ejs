@@ -165,7 +165,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
-    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return response;
     }
