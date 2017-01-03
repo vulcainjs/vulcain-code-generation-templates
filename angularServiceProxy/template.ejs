@@ -134,7 +134,7 @@ export class <%= normalizeService(serviceName) %> {
     }
 
 <% for(let method of services) {
-    let p = arguments(method);
+    let p = arguments(method);    
     if( method.kind == "action") { %>
     /**
     * Action: <%= method.description %>
@@ -142,7 +142,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } -%>
     */
-    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%>, args?): Observable<T> {
+    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
         let response = this.sendAction<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
@@ -151,13 +151,11 @@ export class <%= normalizeService(serviceName) %> {
     * <%= method.description || "Get" %>
     * @params id string - unique id
     */
-    get<%=method.outputSchema%><T>(id: string, args?): Observable<T> {
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?): Observable<T> {
         let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
     <% } else if(method.kind === "query" && method.action === "all") {
-        if(p.params.length > 0)
-            p.params.push(", ");
     %>
     /**
     * <%= method.description || "Get all" %>
@@ -167,13 +165,11 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
-    getAll<%=method.outputSchema%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return response;
     }
     <% } else {
-        if(p.params.length > 0)
-            p.params.push(", ");
     %>
     /**
     * Query: <%= method.description %>
@@ -181,7 +177,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
     */
-    get<%=normalizeMethod(method.verb)%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return response;
     }

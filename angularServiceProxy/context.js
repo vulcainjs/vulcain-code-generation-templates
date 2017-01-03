@@ -83,12 +83,13 @@ class Context {
         return schema.properties;
     }
 
-    normalizeMethod(name) {
+    normalizeMethod(name, prefix) {
         let parts = name.split('.');
+        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])        
         if (parts.length === 1)
-            return this.pascalCase(parts[0]);
+            return parts[0];
+
         parts[1] = this.pascalCase(parts[1]);
-        parts[0] = this.pascalCase(parts[0]);
         return parts[0] + parts[1];
     }
 
@@ -114,6 +115,9 @@ class Context {
             args += prop.name
         }
         args += "}";
+
+        if(params.length > 0)
+            params.push(", ");        
         return { params, args };
     }
 }
