@@ -149,7 +149,9 @@ export abstract class <%= normalizeService(serviceName) %> {
         let p: <%= method.inputSchema %>;
         if( <%=p.paramNames[0]%> instanceof <%= method.inputSchema %>) {
             p = <%=p.paramNames[0]%>;
-            args = <%=p.paramNames[1]%>;
+            <%_ if( p.paramNames.length > 1) { _%>
+            args = <%=p.paramNames[1] %>;
+            <%_ } -%>
         }
         else {
             p = <%=p.args%>;        
