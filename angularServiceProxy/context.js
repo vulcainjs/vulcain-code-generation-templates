@@ -4,7 +4,7 @@ const rest = require('unirest');
 class Context {
 
     prompts() {
-      return [ { name: 'discoveryAddress', type: 'list', message: 'Select service', lookup: 'service.all'}];
+        return [{ name: 'discoveryAddress', type: 'list', message: 'Select service', lookup: 'service.all' }];
     }
 
     init(options) {
@@ -14,7 +14,7 @@ class Context {
                 let request = rest.get(options.discoveryAddress)
                     .header('Accept', 'application/json')
                     .type("json");
-            
+
                 this.sendRequest(request).then(function (response) {
                     if (response.ok) {
                         var info = response.body;
@@ -65,15 +65,15 @@ class Context {
         for (let i = 1; i < parts.length; i++) {
             result += this.pascalCase(parts[i]);
         }
-         return (result + "Service").replace(/-/g, '');
+        return (result + "Service").replace(/-/g, '');
     }
 
     getInputProperties(method) {
         let schemaName = method.inputSchema;
         if (!schemaName) {
             let params = [];
-            if( method.action === "all")
-                params.push({type:"any", name:"query", description: "Query filter"});
+            if (method.action === "all")
+                params.push({ type: "any", name: "query", description: "Query filter" });
             return params;
         }
         let schema = this.schemas.find(s => s.name === schemaName);
@@ -85,7 +85,7 @@ class Context {
 
     normalizeMethod(name, prefix) {
         let parts = name.split('.');
-        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])        
+        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
         if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
             return parts[0];
 
@@ -104,25 +104,40 @@ class Context {
         if (!schema) { // get
             return { params: ["id: string"], args: "null" };
         }
+
+        let fullParams = [];
         let params = [];
         let args = "{";
         for (let prop of schema.properties) {
             if (params.length > 0) {
                 params.push(", ");
+                fullParams.push(", ");
+            }
+            if( fullParams.length == 0) {
+                fullParams.push(prop.name + this.required(prop) + ": " + prop.type + "|" + schemaName);
+            }
+            else  if( fullParams.length == 1) {
+                fullParams.push(prop.name + this.required(prop) + ": " + prop.type + "|any");
+            }
+            else {
+                fullParams.push(prop.name + this.required(prop) + ": " + prop.type);                
             }
             params.push(prop.name + this.required(prop) + ": " + prop.type);
-            if(prop.name==="id" && method.kind === "get")
+            if (prop.name === "id" && method.kind === "get")
                 continue;
-            if(args.length > 1) {
+            
+            if (args.length > 1) {
                 args += ", ";
             }
             args += prop.name
         }
         args += "}";
 
-        if(params.length > 0)
-            params.push(", ");        
-        return { params, args };
+        if (params.length > 0) {
+            params.push(", ");
+            fullParams.push(", ");
+        }
+        return { params, args, fullParams };
     }
 }
 

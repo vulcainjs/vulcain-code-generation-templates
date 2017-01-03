@@ -142,8 +142,23 @@ export abstract class <%= normalizeService(serviceName) %> {
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } -%>
     */
-    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let response = this.sendAction<T>("<%=method.verb%>", <%=p.args%>, args);
+<%_ if( method.inputSchema) { _%>
+    <%=normalizeMethod(method.verb)%><T>(data: T, args?): Observable<T>;
+    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T>;        
+    <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
+        let p: <%= method.inputSchema %>;
+        if( name instanceof <%= method.inputSchema %>) {
+            p = arguments[0];
+            args = arguments[1];
+        }
+        else {
+            p = <%=p.args%>;        
+        }    
+<%_ } else { -%>
+    <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
+        let p = <%=p.args%>;        
+<%_ } -%>
+        let response = this.sendAction<T>("<%=method.verb%>", p, args);
         return response;
     }
     <% } else if( method.kind === "get" ) { %>
