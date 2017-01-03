@@ -22,7 +22,7 @@ export class <%= model.name%> {
     * <%= prop.description %>
     */
   <%} -%>    
-    <%= prop.name%>: <%= prop.type %>;
+    <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
 <%} -%>
 }
 <%}%>
