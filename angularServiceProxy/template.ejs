@@ -1,7 +1,7 @@
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 
-export interface VulcainResponse<T> {
+interface VulcainResponse<T> {
     value: T;
     status: "Success" | "Error" | "Pending";
     error?: {
@@ -21,23 +21,23 @@ export class <%= model.name%> {
     /**
     * <%= prop.description %>
     */
-    <%_ } _%>
     <%= prop.name%>: <%= prop.type %>;
 <%} -%>
 }
 <%}%>
 
 // Service proxy
-export abstract class <%= normalizeService(serviceName) %> {
-   
-    constructor(protected http: Http, private baseUrl: string) {
+export class <%= normalizeService(serviceName) %> {
+
+    constructor(public http: Http, protected baseUrl: string) {
     }
 
     protected abstract httpOptions(): RequestOptions;
+    protected abstract onUnauthenticated();
 
-  protected sendAction<T>(verb: string, data): Observable<T> {
+    protected sendAction<T>(verb: string, data, args?): Observable<T> {
         return this.http
-            .post(this.baseUrl + verb, data, this.httpOptions())
+            .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -51,12 +51,17 @@ export abstract class <%= normalizeService(serviceName) %> {
                 return res && res.value;
             })
             .do(data => console.log(data))
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     }
 
-    protected query<T>(verb: string, query?, page?: number, maxByPage?:number): Observable<T> {
+    protected query<T>(verb: string, query?, page?: number, maxByPage?:number, args?): Observable<{page: number, total: number, values: T}> {
+        if( page || maxByPage) {
+            query = query || {};
+            query.$page = page;
+            query.$maxByPage = maxByPage;
+        }
         return this.http
-            .get(this.baseUrl + verb, this.httpOptions())
+            .get( this.resolveBackendUrl(this.baseUrl + verb, query, args), this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -67,15 +72,15 @@ export abstract class <%= normalizeService(serviceName) %> {
                     console.log(error);
                     return Observable.throw(error);
                 }                
-                return {values: res && res.value, page};
+                return {values: res && res.value, page: page};
             })
             .do(data => console.log(data))
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     }
 
-    protected get<T>(schema: string, id: string): Observable<T> {
+    protected get<T>(verb: string, id: string, args?): Observable<T> {
         return this.http
-            .get(this.baseUrl + schema + ".get/" + id, this.httpOptions())
+            .get( this.resolveBackendUrl(this.baseUrl + verb + "/" + id, args), this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -89,13 +94,42 @@ export abstract class <%= normalizeService(serviceName) %> {
                 return res && res.value;
             })
             .do(data => console.log(data))
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     }
 
     protected handleError(error: Response) {
         console.error(error);
+        if(error && error.status === 401) {
+            this.onUnauthenticated();
+            return;
+        }
         let msg = {status: error.status, message:`Error status code ${error.status} at ${error.url}`};
         return Observable.throw(msg);
+    }
+
+   resolveBackendUrl(baseurl: string, ...urlSegments: (string | any)[]): string {
+
+        if (urlSegments) {
+            baseurl += urlSegments.filter((s: any) => typeof s === 'string').map((s: string) => encodeURIComponent(s)).join('/');
+            let query = urlSegments.filter((s: any) => s && typeof s !== 'string');
+            if (query.length) {
+                let sep = '?';
+                query.forEach((obj: any) => {
+                    for (let p in obj) {
+                        if (!obj.hasOwnProperty(p)) {
+                            continue;
+                        }
+                        if(obj[p] !== undefined) {
+                            baseurl = baseurl.concat(sep, p, '=', encodeURIComponent(obj[p]));
+                            sep = '&';
+                        }
+                    }
+                });
+            }
+            return baseurl;
+        } else {
+            return baseurl;
+        }
     }
 
 <% for(let method of services) {
@@ -103,10 +137,12 @@ export abstract class <%= normalizeService(serviceName) %> {
     if( method.kind == "action") { %>
     /**
     * Action: <%= method.description %>
-    * @params {<%= method.outputSchema||"any" %>} data 
+    <%_ for(let p of getInputProperties(method)) { _%>
+    * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
+    <%_ } -%>
     */
-    <%=normalizeMethod(method.verb)%>( data: <%=method.outputSchema||"any"%>): Observable<<%=method.outputSchema||"any"%>> {
-        let response = this.sendAction<<%=method.outputSchema||"any"%>>("<%=method.verb%>", data);
+    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%>, args?): Observable<T> {
+        let response = this.sendAction<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
     <% } else if( method.kind === "get" ) { %>
@@ -114,8 +150,8 @@ export abstract class <%= normalizeService(serviceName) %> {
     * <%= method.description || "Get" %>
     * @params id string - unique id
     */
-    get<%=method.outputSchema%>(id: string): Observable<<%=method.outputSchema||"any"%>> {
-        let response = this.get<<%=method.outputSchema||"any"%>>("<%=method.verb%>", id);
+    get<%=method.outputSchema%><T>(id: string, args?): Observable<T> {
+        let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
     <% } else if(method.kind === "query" && method.action === "all") {
@@ -130,8 +166,8 @@ export abstract class <%= normalizeService(serviceName) %> {
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
-    getAll<%=method.outputSchema%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-        let response =this.query<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+    getAll<%=method.outputSchema%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return response;
     }
     <% } else {
@@ -144,9 +180,8 @@ export abstract class <%= normalizeService(serviceName) %> {
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
     */
-    <%=normalizeMethod(method.verb)%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-
-        let response = this.query<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+    get<%=normalizeMethod(method.verb)%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return response;
     }
 <% }

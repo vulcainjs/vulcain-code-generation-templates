@@ -86,8 +86,10 @@ class Context {
     normalizeMethod(name) {
         let parts = name.split('.');
         if (parts.length === 1)
-            return this.camelCase(parts[0]);
-        return this.camelCase(parts[1]) + this.pascalCase(parts[0]);
+            return this.pascalCase(parts[0]);
+        parts[1] = this.pascalCase(parts[1]);
+        parts[0] = this.pascalCase(parts[0]);
+        return parts[0] + parts[1];
     }
 
     arguments(method) {
