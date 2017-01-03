@@ -141,28 +141,29 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } -%>
+    * @params [optional] args - additional url parameters
     */
 <%_ if( method.inputSchema) { _%>
-    <%=normalizeMethod(method.verb)%><T>(data: <%= method.inputSchema %>, args?): Observable<T>;
-    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T>;        
-    <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
-        let p: <%= method.inputSchema %>;
-        if( <%=p.paramNames[0]%> instanceof <%= method.inputSchema %>) {
-            p = <%=p.paramNames[0]%>;
-            <%_ if( p.paramNames.length > 1) { _%>
-            args = <%=p.paramNames[1] %>;
-            <%_ } -%>
-        }
-        else {
-            p = <%=p.args%>;        
-        }    
+    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
+        let data = <%=p.args%>;        
+        return this.<%=normalizeMethod(method.verb)%>Entity<T>(data, args);
+    }
+
+    /**
+    * Action: <%= method.description %>
+    * @params {<%= method.inputSchema %>} entity - 
+    * @params [optional] args - additional url parameters    
+    */     
+    <%=normalizeMethod(method.verb)%>Entity<T>(data: <%= method.inputSchema %>, args?): Observable<T> {
+        return this.<%=normalizeMethod(method.verb)%><T>("<%=method.verb%>", data, args);     
+    }    
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let p = <%=p.args%>;        
-<%_ } -%>
-        let response = this.sendAction<T>("<%=method.verb%>", p, args);
+        let data = <%=p.args%>;        
+        let response = this.sendAction<T>("<%=method.verb%>", data, args);
         return response;
     }
+<%_ } -%>    
     <% } else if( method.kind === "get" ) { %>
     /**
     * <%= method.description || "Get" %>
@@ -182,6 +183,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ } _%>
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
+    * @params [optional] args - additional url parameters    
     */
     <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
@@ -194,6 +196,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
+    * @params [optional] args - additional url parameters    
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);

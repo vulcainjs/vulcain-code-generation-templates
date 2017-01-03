@@ -105,25 +105,13 @@ class Context {
             return { params: ["id: string"], args: "null" };
         }
 
-        let paramNames = [];
-        let fullParams = [];
         let params = [];
         let args = "{";
         for (let prop of schema.properties) {
             if (params.length > 0) {
                 params.push(", ");
-                fullParams.push(", ");
             }
-            if( fullParams.length == 0) {
-                fullParams.push(prop.name + this.required(prop) + ": " + prop.type + "|" + schemaName);
-            }
-            else  if( fullParams.length == 1) {
-                fullParams.push(prop.name + this.required(prop) + ": " + prop.type + "|any");
-            }
-            else {
-                fullParams.push(prop.name  + "?: " + prop.type);                
-            }
-            paramNames.push(prop.name);
+ 
             params.push(prop.name + this.required(prop) + ": " + prop.type);
             if (prop.name === "id" && method.kind === "get")
                 continue;
@@ -137,9 +125,8 @@ class Context {
 
         if (params.length > 0) {
             params.push(", ");
-            fullParams.push(", ");
         }
-        return { params, args, fullParams, paramNames };
+        return { params, args };
     }
 }
 
