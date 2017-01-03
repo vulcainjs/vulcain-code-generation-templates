@@ -155,7 +155,7 @@ export abstract class <%= normalizeService(serviceName) %> {
             p = <%=p.args%>;        
         }    
 <%_ } else { -%>
-    <%=normalizeMethod(method.verb)%><T>(<%=p.fullParams.join('')%> args?): Observable<T> {
+    <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
         let p = <%=p.args%>;        
 <%_ } -%>
         let response = this.sendAction<T>("<%=method.verb%>", p, args);
