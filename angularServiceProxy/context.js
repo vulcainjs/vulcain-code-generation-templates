@@ -86,7 +86,7 @@ class Context {
     normalizeMethod(name, prefix) {
         let parts = name.split('.');
         parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])        
-        if (parts.length === 1 || (parts[1].toLowerCase() === "all" && parts[1].toLowerCase() === "get"))
+        if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
             return parts[0];
 
         parts[1] = this.pascalCase(parts[1]);
