@@ -79,11 +79,11 @@ export abstract class <%= normalizeService(serviceName) %> {
             .catch(this.handleError.bind(this));
     }
 
-    protected get<T>(verb: string, id: string, args?): Observable<T> {
+    protected get<T>(verb: string, id: string|any, args?): Observable<T> {
         let url = this.baseUrl + verb;
         if(typeof id === "string") {
             url = url + "/" + id;
-            id=null;
+            id = null;
         }
         return this.http
             .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
