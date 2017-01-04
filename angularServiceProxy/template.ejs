@@ -200,7 +200,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
-        return response;
+        return <%= method.outputType === "one" ? "response.values" : "response" %>;
     }
 <% }
 }%>
