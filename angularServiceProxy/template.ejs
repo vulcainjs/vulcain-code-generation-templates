@@ -198,7 +198,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ } _%>
     * @params [optional] args - additional url parameters    
     */
-    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%><%= method.outputType === "one" ? "" : " page?: number, maxByPage?: number,"%> args?) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
         return <%= method.outputType === "one" ? "response.values" : "response" %>;
     }
