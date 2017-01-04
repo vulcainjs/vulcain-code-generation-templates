@@ -57,9 +57,9 @@ export abstract class <%= normalizeService(serviceName) %> {
 
     protected query<T>(verb: string, query?, page?: number, maxByPage?:number, args?): Observable<{page: number, total: number, values: T}> {
         if( page || maxByPage) {
-            query = query || {};
-            query.$page = page;
-            query.$maxByPage = maxByPage;
+            args = args || {};
+            args.$page = page;
+            args.$maxByPage = maxByPage;
         }
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, query, args), this.httpOptions())
@@ -80,8 +80,13 @@ export abstract class <%= normalizeService(serviceName) %> {
     }
 
     protected get<T>(verb: string, id: string, args?): Observable<T> {
+        let url = this.baseUrl + verb;
+        if(typeof id === "string") {
+            url = url + "/" + id;
+            id=null;
+        }
         return this.http
-            .get( this.resolveBackendUrl(this.baseUrl + verb + "/" + id, args), this.httpOptions())
+            .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -198,10 +203,17 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ } _%>
     * @params [optional] args - additional url parameters    
     */
-    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%><%= method.outputType === "one" ? "" : " page?: number, maxByPage?: number,"%> args?) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
-        return <%= method.outputType === "one" ? "response.values" : "response" %>;
+<%_ if(method.outputType === "one") { _%> 
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
+        let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
+        return response;
     }
+<%_ } else { _%>    
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
+        return response;
+    }
+<%_ } _%>
 <% }
 }%>
 }
