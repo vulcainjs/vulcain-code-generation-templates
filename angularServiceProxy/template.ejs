@@ -47,12 +47,11 @@ export abstract class <%= normalizeService(serviceName) %> {
                 if(res && res.error) {
                     const error = res.error;
                     console.log(error);
-                    return Observable.throw(error);
+                    throw error;
                 }                
                 return res && res.value;
             })
-            .do(data => console.log(data))
-            .catch(this.handleError.bind(this));
+            .do(data => console.log(data));
     }
 
     protected query<T>(verb: string, query?, page?: number, maxByPage?:number, args?): Observable<{page: number, total: number, values: T}> {
@@ -71,12 +70,11 @@ export abstract class <%= normalizeService(serviceName) %> {
                 if(res && res.error) {
                     const error = res.error;
                     console.log(error);
-                    return Observable.throw(error);
+                    throw error;
                 }                
                 return {values: res && res.value, page: page};
             })
-            .do(data => console.log(data))
-            .catch(this.handleError.bind(this));
+            .do(data => console.log(data));
     }
 
     protected get<T>(verb: string, id: string|any, args?): Observable<T> {
@@ -95,22 +93,21 @@ export abstract class <%= normalizeService(serviceName) %> {
                 if(res && res.error) {
                     const error = res.error;
                     console.log(error);
-                    return Observable.throw(error);
+                    throw error;
                 }
                 return res && res.value;
             })
-            .do(data => console.log(data))
-            .catch(this.handleError.bind(this));
+            .do(data => console.log(data));
     }
 
     protected handleError(error: Response) {
         console.error(error);
-        if(error && error.status === 401) {
+        if (error && error.status === 401) {
             this.onUnauthenticated();
             return;
         }
-        let msg = {status: error.status, message:`Error status code ${error.status} at ${error.url}`};
-        return Observable.throw(msg);
+        let msg = `Error status code ${error.status} at ${error.url}`;
+        throw new Error(msg);
     }
 
    resolveBackendUrl(baseurl: string, ...urlSegments: (string | any)[]): string {
