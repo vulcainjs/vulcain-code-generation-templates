@@ -40,9 +40,6 @@ export abstract class <%= normalizeService(serviceName) %> {
         return this.http
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
             .map((response: Response) => {
-                if(response.status != 200) {
-                    return this.handleError(response);
-                }
                 let res = <VulcainResponse<T>>response.json();
                 if(res && res.error) {
                     const error = res.error;
@@ -51,17 +48,19 @@ export abstract class <%= normalizeService(serviceName) %> {
                 }                
                 return res && res.value;
             })
-            .do(data => console.log(data));
+            .do(data => console.log(data))
+            .catch(this.handleError.bind(this));
     }
 
-    protected query<T>(verb: string, query?, page?: number, maxByPage?:number, args?): Observable<{page: number, total: number, values: T}> {
-        if( page || maxByPage) {
+    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?): Observable<{page: number, total: number, values: T}> {
+        if( page || maxByPage || query) {
             args = args || {};
             args.$page = page;
             args.$maxByPage = maxByPage;
+            args.$query = JSON.stringify(query)
         }
         return this.http
-            .get( this.resolveBackendUrl(this.baseUrl + verb, query, args), this.httpOptions())
+            .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
             .map((response: Response) => {
                 if(response.status != 200) {
                     return this.handleError(response);
@@ -74,7 +73,8 @@ export abstract class <%= normalizeService(serviceName) %> {
                 }                
                 return {values: res && res.value, page: page};
             })
-            .do(data => console.log(data));
+            .do(data => console.log(data))
+            .catch(this.handleError.bind(this));
     }
 
     protected get<T>(verb: string, id: string|any, args?): Observable<T> {
@@ -97,32 +97,43 @@ export abstract class <%= normalizeService(serviceName) %> {
                 }
                 return res && res.value;
             })
-            .do(data => console.log(data));
+            .do(data => console.log(data))
+            .catch(this.handleError.bind(this));
     }
 
     protected handleError(error: Response) {
         console.error(error);
         if (error && error.status === 401) {
-            this.onUnauthenticated();
-            return;
+            let res = this.onUnauthenticated();
+            return res || Observable.throw(new Error("Unauthenticated"));
         }
         let msg = `Error status code ${error.status} at ${error.url}`;
-        throw new Error(msg);
+        return Observable.throw(new Error(msg));
     }
 
    resolveBackendUrl(baseurl: string, ...urlSegments: (string | any)[]): string {
 
+        let hasQueryPoint = baseurl.includes("?");
         if (urlSegments) {
-            baseurl += urlSegments.filter((s: any) => typeof s === 'string').map((s: string) => encodeURIComponent(s)).join('/');
+            baseurl += "/";
+
+            let paths: Array<string> = urlSegments.filter((s: any) => typeof s === 'string');
+
+            if (hasQueryPoint && paths.length >= 1) {
+                throw new Error('You can\'t have a path on your url after a query string');
+            } else {
+                baseurl += paths.map((s: string) => encodeURIComponent(s)).join('/');
+            }
+
             let query = urlSegments.filter((s: any) => s && typeof s !== 'string');
             if (query.length) {
-                let sep = '?';
+                let sep = hasQueryPoint ? "&" : '?';
                 query.forEach((obj: any) => {
                     for (let p in obj) {
                         if (!obj.hasOwnProperty(p)) {
                             continue;
                         }
-                        if(obj[p] !== undefined) {
+                        if (obj[p]) {
                             baseurl = baseurl.concat(sep, p, '=', encodeURIComponent(obj[p]));
                             sep = '&';
                         }
@@ -185,10 +196,10 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ } _%>
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
-    * @params [optional] args - additional url parameters    
+    * @params [optional] query - filter query     
     */
-    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
+    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, query?) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
         return response;
     }
     <% } else {
@@ -198,16 +209,18 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
+<%_ if(method.outputType === "one") { _%> 
     * @params [optional] args - additional url parameters    
     */
-<%_ if(method.outputType === "one") { _%> 
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
         let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
 <%_ } else { _%>    
-    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, args?) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, args);
+    * @params [optional] query - filter query     
+    */
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, query?) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
         return response;
     }
 <%_ } _%>
