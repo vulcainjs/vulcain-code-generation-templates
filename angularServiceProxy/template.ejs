@@ -18,7 +18,7 @@ interface VulcainResponse<T> {
 export class <%= model.name%> {
     __schema?: string;
 <%_ for(let prop of model.properties) {
-    if(prop.description) { _%>
+    if(prop.description) { -%>
     /**
     * <%= prop.description %>
     */
@@ -26,7 +26,7 @@ export class <%= model.name%> {
     <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
 <%_ } -%>
 }
-<%}%>
+<%_}-%>
 
 // Service proxy
 export abstract class <%= normalizeService(serviceName) %> {
@@ -45,7 +45,6 @@ export abstract class <%= normalizeService(serviceName) %> {
                 let res = <VulcainResponse<T>>response.json();            
                 return res && res.value;
             })
-            .do(data => console.log(data))
             .catch(this.handleError.bind(this));
     }
 
@@ -62,7 +61,6 @@ export abstract class <%= normalizeService(serviceName) %> {
                 let res = <VulcainResponse<T>>response.json();           
                 return {values: res && res.value, page: page};
             })
-            .do(data => console.log(data))
             .catch(this.handleError.bind(this));
     }
 
@@ -78,15 +76,14 @@ export abstract class <%= normalizeService(serviceName) %> {
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
             })
-            .do(data => console.log(data))
             .catch(this.handleError.bind(this));
     }
 
     protected handleError(res: Response) {
         if (res && res.status === 401) {
-            console.error("Unauthenticated");        
-            let res = this.onUnauthenticated();
-            return res || Observable.throw(new Error("Unauthenticated"));
+            console.error("Unauthenticated");
+            let r = this.onUnauthenticated();
+            return r || Observable.throw(new Error("Unauthenticated"));
         }
 
         let message = `Error status code ${res.status} at ${res.url}`;
@@ -96,13 +93,13 @@ export abstract class <%= normalizeService(serviceName) %> {
                 if(body && body.error) {
                     const error = body.error;
                     console.log(error);
-                    let message = "<b>" + (error.message) + "</b>";
+                    message = "<b>" + (error.message) + "</b>";
                     if (error.errors) {
                         message =  message + " :<br/>" + error.errors.map(m=>m.message).join('</br>');
                     }
-                }    
+                }
             }
-            catch(e) {/*ignore*/}    
+            catch(e) {/*ignore*/}
         }
 
         this.onError(message);
@@ -156,7 +153,7 @@ export abstract class <%= normalizeService(serviceName) %> {
     */
 <%_ if( method.inputSchema) { _%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let _data = <%=p.args%>;        
+        let _data = <%=p.args%>;
         return this.<%=normalizeMethod(method.verb)%>Entity<T>(_data, args);
     }
 
@@ -164,13 +161,13 @@ export abstract class <%= normalizeService(serviceName) %> {
     * Action: <%= method.description %>
     * @params {<%= method.inputSchema %>} entity - 
     * @params [optional] args - additional url parameters    
-    */     
+    */
     <%=normalizeMethod(method.verb)%>Entity<T>(data: <%= method.inputSchema %>, args?): Observable<T> {
-        return this.sendAction<T>("<%=method.verb%>", data, args);     
-    }    
+        return this.sendAction<T>("<%=method.verb%>", data, args);
+    }
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let data = <%=p.args%>;        
+        let data = <%=p.args%>;
         let response = this.sendAction<T>("<%=method.verb%>", data, args);
         return response;
     }
@@ -185,13 +182,13 @@ export abstract class <%= normalizeService(serviceName) %> {
         let response = this.get<T>("<%=method.verb%>", id, <%=p.args%>);
         return response;
     }
-    <% } else if(method.kind === "query" && method.action === "all") {
-    %>
+    <%_ } else if(method.kind === "query" && method.action === "all") {
+    -%>
     /**
     * <%= method.description || "Get all" %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } _%>
+    <%_ } -%>
     * @params [optional] query - filter query         
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
@@ -200,21 +197,21 @@ export abstract class <%= normalizeService(serviceName) %> {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
         return response;
     }
-    <% } else {
-    %>
+    <%_ } else {
+    -%>
     /**
     * Query: <%= method.description %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } _%>
-<%_ if(method.outputType === "one") { _%> 
+    <%_ } -%>
+<%_ if(method.outputType === "one") { -%> 
     * @params [optional] args - additional url parameters    
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
         let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
-<%_ } else { _%>           
+<%_ } else { -%>           
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
@@ -222,7 +219,7 @@ export abstract class <%= normalizeService(serviceName) %> {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
         return response;
     }
-<%_ } _%>
-<% }
-}%>
+<%_ } -%>
+<%_ }
+} -%>
 }
