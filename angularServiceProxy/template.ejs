@@ -16,15 +16,15 @@ interface VulcainResponse<T> {
 * <%= model.description %>
 */
 export class <%= model.name%> {
-    __schema: string;
-<% for(let prop of model.properties) {
+    __schema?: string;
+<%_ for(let prop of model.properties) {
     if(prop.description) { _%>
     /**
     * <%= prop.description %>
     */
-<%} -%>    
+<%_ } -%>    
     <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
-<%} -%>
+<%_ } -%>
 }
 <%}%>
 
