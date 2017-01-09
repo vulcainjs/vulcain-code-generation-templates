@@ -42,7 +42,7 @@ export abstract class <%= normalizeService(serviceName) %> {
         return this.http
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();            
+                let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
             })
             .catch(this.handleError.bind(this));
@@ -58,7 +58,7 @@ export abstract class <%= normalizeService(serviceName) %> {
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();           
+                let res = <VulcainResponse<T>>response.json();
                 return {values: res && res.value, page: page};
             })
             .catch(this.handleError.bind(this));
