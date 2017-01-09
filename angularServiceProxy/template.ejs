@@ -58,9 +58,6 @@ export abstract class <%= normalizeService(serviceName) %> {
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
             .map((response: Response) => {
-                if(response.status != 200) {
-                    return this.handleError(response);
-                }
                 let res = <VulcainResponse<T>>response.json();           
                 return {values: res && res.value, page: page};
             })
@@ -77,9 +74,6 @@ export abstract class <%= normalizeService(serviceName) %> {
         return this.http
             .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
             .map((response: Response) => {
-                if(response.status != 200) {
-                    return this.handleError(response);
-                }
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
             })
