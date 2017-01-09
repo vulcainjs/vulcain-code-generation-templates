@@ -35,17 +35,13 @@ export abstract class <%= normalizeService(serviceName) %> {
 
     protected abstract httpOptions(): RequestOptions;
     protected abstract onUnauthenticated();
-
+    protected onError(msg: string) {}
+    
     protected sendAction<T>(verb: string, data, args?): Observable<T> {
         return this.http
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();
-                if(res && res.error) {
-                    const error = res.error;
-                    console.log(error);
-                    throw error;
-                }                
+                let res = <VulcainResponse<T>>response.json();            
                 return res && res.value;
             })
             .do(data => console.log(data))
@@ -65,12 +61,7 @@ export abstract class <%= normalizeService(serviceName) %> {
                 if(response.status != 200) {
                     return this.handleError(response);
                 }
-                let res = <VulcainResponse<T>>response.json();
-                if(res && res.error) {
-                    const error = res.error;
-                    console.log(error);
-                    throw error;
-                }                
+                let res = <VulcainResponse<T>>response.json();           
                 return {values: res && res.value, page: page};
             })
             .do(data => console.log(data))
@@ -90,25 +81,37 @@ export abstract class <%= normalizeService(serviceName) %> {
                     return this.handleError(response);
                 }
                 let res = <VulcainResponse<T>>response.json();
-                if(res && res.error) {
-                    const error = res.error;
-                    console.log(error);
-                    throw error;
-                }
                 return res && res.value;
             })
             .do(data => console.log(data))
             .catch(this.handleError.bind(this));
     }
 
-    protected handleError(error: Response) {
-        console.error(error);
+    protected handleError(res: Response) {
         if (error && error.status === 401) {
+            console.error("Unauthenticated");        
             let res = this.onUnauthenticated();
             return res || Observable.throw(new Error("Unauthenticated"));
         }
-        let msg = `Error status code ${error.status} at ${error.url}`;
-        return Observable.throw(new Error(msg));
+
+        let message = `Error status code ${error.status} at ${error.url}`;
+        if(res instanceof Response) {
+            try {
+                let res = <VulcainResponse<T>>response.json();
+                if(res && res.error) {
+                    const error = res.error;
+                    console.log(error);
+                    let message = "<b>" + (error.message) + "</b>";
+                    if (error.errors) {
+                        message =  message + " :<br/>" + error.errors.map(m=>m.message).join('</br>');
+                    }
+                }    
+            }
+            catch(e) {/*ignore*/}    
+        }
+
+        this.onError(message);
+        return Observable.throw(new Error(message));
     }
 
    resolveBackendUrl(baseurl: string, ...urlSegments: (string | any)[]): string {
