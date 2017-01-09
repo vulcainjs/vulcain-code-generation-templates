@@ -194,11 +194,11 @@ export abstract class <%= normalizeService(serviceName) %> {
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } _%>
+    * @params [optional] query - filter query         
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
-    * @params [optional] query - filter query     
     */
-    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, query?) {
+    <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> query?, page?: number, maxByPage?: number) {
         let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
         return response;
     }
@@ -216,11 +216,12 @@ export abstract class <%= normalizeService(serviceName) %> {
         let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
         return response;
     }
-<%_ } else { _%>    
-    * @params [optional] query - filter query     
+<%_ } else { _%>           
+    * @params {number} page - Page to retrieve
+    * @params {number} maxByPage - Item by page (default 100)
     */
-    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number, query?) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
+    <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
+        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
         return response;
     }
 <%_ } _%>
