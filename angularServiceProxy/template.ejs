@@ -1,4 +1,4 @@
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Http, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 
 interface VulcainResponse<T> {
@@ -53,7 +53,7 @@ export abstract class <%= normalizeService(serviceName) %> {
             args = args || {};
             args.$page = page;
             args.$maxByPage = maxByPage;
-            args.$query = JSON.stringify(query)
+            args.$query = JSON.stringify(query);
         }
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
