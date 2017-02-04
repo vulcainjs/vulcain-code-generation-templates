@@ -19,7 +19,7 @@ export class <%= model.name%> {
     <%_ } else { _%>
     @Property(<%- JSON.stringify(prop.metadata) %>)
     <%_ } _%>
-    <%= prop.name%>: <%= prop.type %>;
+    <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
 <%} -%>
 }
 <%}%>
@@ -38,15 +38,12 @@ export class <%= normalizeService(serviceName) %> {
     private static serviceVersion = "<%=serviceVersion%>";
     private userContext: {apiKey: string, tenant: string};
     
-    constructor(private context: RequestContext, apiKey?: string) {
+    /**
+    * 
+    */
+    constructor(private context: RequestContext, apiKey?: string, apiKeyTenant=System.DefaultTenant) {
         if(apiKey) {
-            let parts = apiKey.split(':');
-            let tenant;
-            if(parts.length === 2) {
-                apiKey = parts[1];
-                tenant = parts[0] || System.defaultTenant;
-            }
-            this.userContext = {apiKey, tenant};
+            this.userContext = {apiKey, tenant: apiKeyTenant};
         }
     }
 <% for(let method of services) {
@@ -57,54 +54,134 @@ export class <%= normalizeService(serviceName) %> {
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
     <%_ } -%>
+    * @params [optional] args - additional url parameters
     */
-    async <%=normalizeMethod(method.verb)%>Async(<%=p.params.join('')%>): Promise<<%=method.outputSchema||"any"%>> {
+<%_ if( method.inputSchema) { _%>
+    async <%=normalizeMethod(method.verb)%>Async(<%=p.params.join('')%> args?) {
+        let _data = <%=p.args%>;
+        return this.<%=normalizeMethod(method.verb)%>EntityAsync(_data, args);
+    }
+    /**
+    * Action: <%= method.description %>
+    * @params {<%= method.inputSchema %>} entity - 
+    * @params [optional] args - additional url parameters    
+    */
+    async <%=normalizeMethod(method.verb)%>EntityAsync(data: <%= method.inputSchema %>, args?): Promise<<%=method.outputSchema||"any"%>> {
         let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
-        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>("action", <%= normalizeService(serviceName) %>.serviceName, <%= normalizeService(serviceName) %>.serviceVersion, "<%=method.verb%>", this.userContext, <%=p.args%>);
+        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+            "action", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            data, 
+            args
+        );
         return response;
     }
+<%_ } else { -%>
+    async <%=normalizeMethod(method.verb)%>Async(<%=p.params.join('')%> args?): Promise<<%=method.outputSchema||"any"%>> {
+        let data = <%=p.args%>;
+        let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
+        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+            "action", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            data, 
+            args
+        );
+        return response;
+    }
+<%_ } -%>    
     <% } else if( method.kind === "get" ) { %>
     /**
     * <%= method.description || "Get" %>
     * @params id string - unique id
     */
-    async get<%=method.outputSchema%>Async(id: string): Promise<<%=method.outputSchema||"any"%>> {
+    async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%>): Promise<<%=method.outputSchema||"any"%>> {
         let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
-        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>("get", <%= normalizeService(serviceName) %>.serviceName, <%= normalizeService(serviceName) %>.serviceVersion, "<%=method.verb%>", this.userContext, <%=p.args%>);
+        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+            "get", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            id,
+            <%=p.args%>
+        );
         return response;
     }
     <% } else if(method.kind === "query" && method.action === "all") {
-        if(p.params.length > 0)
-            p.params.push(", ");
-    %>
+ -%>
     /**
     * <%= method.description || "Get all" %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } _%>
+    <%_ } -%>
+    * @params [optional] query - filter query         
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
-    async getAll<%=method.outputSchema%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number): Promise<<%=method.outputSchema||"any"%>[]> {
+    async <%=normalizeMethod(method.verb, 'getAll')%>Async(<%= p.params.join('')%> query?, page?: number, maxByPage?: number): Promise<<%=method.outputSchema||"any"%>[]> {
         let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
-        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("query", <%= normalizeService(serviceName) %>.serviceName, <%= normalizeService(serviceName) %>.serviceVersion, "<%=method.verb%>", this.userContext, <%=p.args%>, page, maxByPage);
+        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>(
+            "query", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            query, 
+            <%=p.args%>, 
+            page, 
+            maxByPage
+        );
         return response.values;
     }
-    <% } else {
-        if(p.params.length > 0)
-            p.params.push(", ");
-    %>
+    <%_ } else {
+    -%>
     /**
     * Query: <%= method.description %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } _%>
+    <%_ } -%>
+<%_ if(method.outputType === "one") { -%> 
+    * @params [optional] args - additional url parameters    
     */
-    async <%=normalizeMethod(method.verb)%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number): Promise< <%=method.outputSchema||"any"%>[] > {
+    async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
         let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
-        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>("query", <%= normalizeService(serviceName) %>.serviceName, <%= normalizeService(serviceName) %>.serviceVersion, "<%=method.verb%>", this.userContext, <%=p.args%>, page, maxByPage);
+        let response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+            "get", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            <%=p.args%>,
+            args
+        );
         return response.values;
     }
-<% }
-}%>
+<%_ } else { -%>           
+    * @params {number} page - Page to retrieve
+    * @params {number} maxByPage - Item by page (default 100)
+    */
+    async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number) {
+        let command = await this.context.getCommandAsync("<%=normalizeService(serviceName) + "Command"%>");
+        let response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>(
+            "query", 
+            <%= normalizeService(serviceName) %>.serviceName, 
+            <%= normalizeService(serviceName) %>.serviceVersion, 
+            "<%=method.verb%>", 
+            this.userContext, 
+            <%=p.args%>, 
+            null,
+            page, 
+            maxByPage
+        );
+        return response.values;
+    }
+<%_ } -%>
+<%_ }
+} -%>
 }

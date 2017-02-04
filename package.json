@@ -1,0 +1,26 @@
+{
+  "name": "vulcain-code-generation",
+  "version": "1.0.0",
+  "description": "usage in the root project directory.",
+  "main": "generate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vulcainjs/vulcain-code-generation-templates.git"
+  },
+  "keywords": [
+    "vulcain"
+  ],
+  "author": "zenasoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vulcainjs/vulcain-code-generation-templates/issues"
+  },
+  "homepage": "https://github.com/vulcainjs/vulcain-code-generation-templates#readme",
+  "dependencies": {
+    "ejs": "^2.5.5",
+    "unirest": "^0.5.1"
+  }
+}
