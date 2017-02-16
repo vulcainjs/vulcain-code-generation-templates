@@ -14,7 +14,7 @@ interface VulcainResponse<T> {
 // Models
 <% for(let model of schemas) { %>
 /**
-* <%= model.description %>
+* <%= model.description  || '.'%>
 */
 export class <%= model.name%> {
     __schema?: string;
@@ -103,7 +103,7 @@ export class <%= normalizeService(serviceName) %> {
                     console.log(error);
                     message = '<b>' + (error.message) + '</b>';
                     if (error.errors) {
-                        message =  message + ' :<br/>' + error.errors.map(m=>m.message).join('</br>');
+                        message =  message + ' :<br/>' + error.errors.map(m => m.message).join('</br>');
                     }
                 }
             } catch (e) {/*ignore*/}
@@ -166,8 +166,8 @@ export class <%= normalizeService(serviceName) %> {
 
     /**
     * Action: <%= method.description %>
-    * @params {<%= method.inputSchema %>} entity - 
-    * @params [optional] args - additional url parameters    
+    * @params {<%= method.inputSchema %>} entity -
+    * @params [optional] args - additional url parameters
     */
     <%=normalizeMethod(method.verb)%>Entity<T>(data: <%= method.inputSchema %>, args?): Observable<T> {
         return this.sendAction<T>('<%=method.verb%>', data, args);
