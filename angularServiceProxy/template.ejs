@@ -32,7 +32,7 @@ export class <%= model.name%> {
 @Injectable()
 export class <%= normalizeService(serviceName) %> {
     
-    protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('/api')) %>';
+    protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>';
 
     constructor(public http: Http) {
     }
