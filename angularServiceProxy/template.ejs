@@ -41,11 +41,11 @@ export abstract class <%= normalizeService(serviceName) %> {
     protected sendAction<T>(verb: string, data, args?): Observable<T> {
         return this.http
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
     protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?): Observable<{page: number, total: number, values: T}> {
@@ -57,33 +57,33 @@ export abstract class <%= normalizeService(serviceName) %> {
         }
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return {values: res && res.value, page: page};
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
     protected get<T>(verb: string, id: string|any, args?): Observable<T> {
         let url = this.baseUrl + verb;
-        if(typeof id === "string") {
-            url = url + "/" + id;
+        if( typeof id === 'string' ) {
+            url = url + '/' + id;
             id = null;
         }
         return this.http
             .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
     protected handleError(res: Response) {
         if (res && res.status === 401) {
-            console.error("Unauthenticated");
+            console.error('Unauthenticated');
             let r = this.onUnauthenticated();
-            return r || Observable.throw(new Error("Unauthenticated"));
+            return r || Observable.throw(new Error('Unauthenticated'));
         }
 
         let message = `Error status code ${res.status} at ${res.url}`;
