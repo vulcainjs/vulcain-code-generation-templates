@@ -22,5 +22,7 @@
   "dependencies": {
     "ejs": "^2.5.5",
     "unirest": "^0.5.1"
+  },
+  "devDependencies": {
   }
 }

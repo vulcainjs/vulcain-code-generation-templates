@@ -1,8 +1,14 @@
-# Templates for code generation
+# Templates for vulcain code generation
 
 usage in the root project directory.
 
 
 ```js
-vulcain --template microServiceProxy <service-name>
+vulcain create --template microServiceProxy --uri <service address>
 ```
+
+| template | Description |
+|----------|-------------|
+| microServiceProxy | Node proxy class for calling another vulcain microservice |
+| angularServiceProxy | Angular service for calling vulcain microservice |
+
