@@ -34,8 +34,12 @@ export abstract class <%= normalizeService(serviceName) %> {
     constructor(public http: Http, protected baseUrl: string) {
     }
 
-    protected abstract httpOptions(): RequestOptions;
-    protected abstract onUnauthenticated();
+    protected httpOptions(): RequestOptions {
+        return null;
+    }
+    
+    protected onUnauthenticated() {}
+    
     protected onError(msg: string) {}
 
     protected sendAction<T>(verb: string, data, args?): Observable<T> {
