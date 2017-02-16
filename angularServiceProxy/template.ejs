@@ -1,5 +1,6 @@
-import { Http, Response, RequestOptions, Injectable } from '@angular/http';
+import { Http, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 interface VulcainResponse<T> {
     value: T;
@@ -18,20 +19,20 @@ interface VulcainResponse<T> {
 export class <%= model.name%> {
     __schema?: string;
 <%_ for(let prop of model.properties) {
-    if(prop.description) { -%>
+    if(prop.description) { _%>
     /**
     * <%= prop.description %>
     */
-<%_ } -%>    
+<%_ } _%>    
     <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
-<%_ } -%>
+<%_ } _%>
 }
-<%_}-%>
+<%_}_%>
 
 // Service proxy
 @Injectable()
 export class <%= normalizeService(serviceName) %> {
-    
+
     protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>';
 
     constructor(public http: Http) {
@@ -50,14 +51,14 @@ export class <%= normalizeService(serviceName) %> {
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
             .catch(this.handleError.bind(this))
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();
+                const res = <VulcainResponse<T>>response.json();
                 return res && res.value;
             });
     }
 
-    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?)
+    protected query<T>(verb: string, args?, page?: number, maxByPage?: number, query?)
      : Observable<{page: number, values: T}> {
-        if( page || maxByPage || query) {
+        if (page || maxByPage || query) {
             args = args || {};
             args.$page = page;
             args.$maxByPage = maxByPage;
@@ -67,14 +68,14 @@ export class <%= normalizeService(serviceName) %> {
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
             .catch(this.handleError.bind(this))
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();
+                const res = <VulcainResponse<T>>response.json();
                 return {values: res && res.value, page: page};
             });
     }
 
     protected get<T>(verb: string, id: string|any, args?): Observable<T> {
         let url = this.baseUrl + verb;
-        if ( typeof id === 'string' ) {
+        if (typeof id === 'string') {
             url = url + '/' + id;
             id = null;
         }
@@ -82,7 +83,7 @@ export class <%= normalizeService(serviceName) %> {
             .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
             .catch(this.handleError.bind(this))
             .map((response: Response) => {
-                let res = <VulcainResponse<T>>response.json();
+                const res = <VulcainResponse<T>>response.json();
                 return res && res.value;
             });
     }
@@ -90,14 +91,14 @@ export class <%= normalizeService(serviceName) %> {
     protected handleError(res: Response) {
         if (res && res.status === 401) {
             console.error('Unauthenticated');
-            let r = this.onUnauthenticated();
+            const r = this.onUnauthenticated();
             return r || Observable.throw(new Error('Unauthenticated'));
         }
 
         let message = `Error status code ${res.status} at ${res.url}`;
         if (res instanceof Response) {
             try {
-                let body = <any>res.json();
+                const body = <any>res.json();
                 if(body && body.error) {
                     const error = body.error;
                     console.log(error);
@@ -120,7 +121,7 @@ export class <%= normalizeService(serviceName) %> {
         if (urlSegments) {
             baseurl += '/';
 
-            let paths: Array<string> = urlSegments.filter((s: any) => typeof s === 'string');
+            const paths: Array<string> = urlSegments.filter((s: any) => typeof s === 'string');
 
             if (hasQueryPoint && paths.length >= 1) {
                 throw new Error('You can\'t have a path on your url after a query string');
@@ -128,9 +129,9 @@ export class <%= normalizeService(serviceName) %> {
                 baseurl += paths.map((s: string) => encodeURIComponent(s)).join('/');
             }
 
-            let query = urlSegments.filter((s: any) => s && typeof s !== 'string');
+            const query = urlSegments.filter((s: any) => s && typeof s !== 'string');
             if (query.length) {
-                let sep = hasQueryPoint ? "&" : '?';
+                let sep = hasQueryPoint ? '&' : '?';
                 query.forEach((obj: any) => {
                     for (let p in obj) {
                         if (!obj.hasOwnProperty(p)) {
@@ -149,19 +150,19 @@ export class <%= normalizeService(serviceName) %> {
         }
     }
 
-<% for(let method of services) {
+<%_ for(let method of services) {
     let p = arguments(method);    
-    if( method.kind == "action") { %>
+    if( method.kind == "action") { -%>
     /**
     * Action: <%= method.description %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } -%>
+    <%_ } _%>
     * @params [optional] args - additional url parameters
     */
-<%_ if( method.inputSchema) { _%>
+<%_ if( method.inputSchema) { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let _data = <%=p.args%>;
+        const _data = <%=p.args%>;
         return this.<%=normalizeMethod(method.verb)%>Entity<T>(_data, args);
     }
 
@@ -175,48 +176,46 @@ export class <%= normalizeService(serviceName) %> {
     }
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        let data = <%=p.args%>;
-        let response = this.sendAction<T>('<%=method.verb%>', data, args);
+        const data = <%=p.args%>;
+        const response = this.sendAction<T>('<%=method.verb%>', data, args);
         return response;
     }
-<%_ } -%>    
-    <% } else if( method.kind === "get" ) { %>
+<%_ } 
+} else if( method.kind === "get" ) { -%>
     /**
     * <%= method.description || "Get" %>
     * @params id string - unique id
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%>): Observable<T> {
 
-        let response = this.get<T>("<%=method.verb%>", id, <%=p.args%>);
+        const response = this.get<T>('<%=method.verb%>', id, <%=p.args%>);
         return response;
     }
-    <%_ } else if(method.kind === "query" && method.action === "all") {
-    -%>
+    <%_ } else if(method.kind === "query" && method.action === "all") { -%>
     /**
     * <%= method.description || "Get all" %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } -%>
+    <%_ } _%>
     * @params [optional] query - filter query         
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
     <%=normalizeMethod(method.verb, 'getAll')%><T>(<%= p.params.join('')%> query?, page?: number, maxByPage?: number) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage, query);
+        const response = this.query<T>('<%=method.verb%>', <%=p.args%>, page, maxByPage, query);
         return response;
     }
-    <%_ } else {
-    -%>
+    <%_ } else { -%>
     /**
     * Query: <%= method.description %>
     <%_ for(let p of getInputProperties(method)) { _%>
     * @params {<%= p.type %>} <%= p.name %> - <%= p.description %>
-    <%_ } -%>
-<%_ if(method.outputType === "one") { -%> 
+    <%_ } _%>
+<%_ if(method.outputType === "one") { _%> 
     * @params [optional] args - additional url parameters    
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
-        let response = this.get<T>("<%=method.verb%>", <%=p.args%>, args);
+        const response = this.get<T>('<%=method.verb%>', <%=p.args%>, args);
         return response;
     }
 <%_ } else { -%>           
@@ -224,7 +223,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} maxByPage - Item by page (default 100)
     */
     <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-        let response = this.query<T>("<%=method.verb%>", <%=p.args%>, page, maxByPage);
+        const response = this.query<T>('<%=method.verb%>', <%=p.args%>, page, maxByPage);
         return response;
     }
 <%_ } -%>

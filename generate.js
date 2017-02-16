@@ -2,8 +2,8 @@ const fs = require('fs');
 const ejs = require('ejs');
 
 // Modify this for testing
-let uri = "http://...";             // Service address
-let template = "microServiceProxy"; // Template name
+let uri = '';             // Service address
+let template = "angularServiceProxy"; // Template name
 
 // Generate code from template
 let templateFolder = './' + template;
