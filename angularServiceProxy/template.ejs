@@ -1,13 +1,13 @@
-import { Http, Response, RequestOptions } from '@angular/http';
+import { Http, Response, RequestOptions, Injectable } from '@angular/http';
 import { Observable } from 'rxjs';
 
 interface VulcainResponse<T> {
     value: T;
-    status: "Success" | "Error" | "Pending";
+    status: 'Success' | 'Error' | 'Pending';
     error?: {
         message: string;
         errors?: Array<{message: string}>;
-    }
+    };
 }
 
 // Models
@@ -29,26 +29,34 @@ export class <%= model.name%> {
 <%_}-%>
 
 // Service proxy
-export abstract class <%= normalizeService(serviceName) %> {
+@Injectable()
+export class <%= normalizeService(serviceName) %> {
+    
+    protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>';
 
-    constructor(public http: Http, protected baseUrl: string) {
+    constructor(public http: Http) {
     }
 
-    protected abstract httpOptions(): RequestOptions;
-    protected abstract onUnauthenticated();
+    protected httpOptions(): RequestOptions {
+        return null;
+    }
+    
+    protected onUnauthenticated() {}
+    
     protected onError(msg: string) {}
 
     protected sendAction<T>(verb: string, data, args?): Observable<T> {
         return this.http
             .post( this.resolveBackendUrl( this.baseUrl + verb, args), data, this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
-    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?): Observable<{page: number, total: number, values: T}> {
+    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?)
+     : Observable<{page: number, values: T}> {
         if( page || maxByPage || query) {
             args = args || {};
             args.$page = page;
@@ -57,45 +65,45 @@ export abstract class <%= normalizeService(serviceName) %> {
         }
         return this.http
             .get( this.resolveBackendUrl(this.baseUrl + verb, args), this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return {values: res && res.value, page: page};
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
     protected get<T>(verb: string, id: string|any, args?): Observable<T> {
         let url = this.baseUrl + verb;
-        if(typeof id === "string") {
-            url = url + "/" + id;
+        if ( typeof id === 'string' ) {
+            url = url + '/' + id;
             id = null;
         }
         return this.http
             .get( this.resolveBackendUrl(url, id, args), this.httpOptions())
+            .catch(this.handleError.bind(this))
             .map((response: Response) => {
                 let res = <VulcainResponse<T>>response.json();
                 return res && res.value;
-            })
-            .catch(this.handleError.bind(this));
+            });
     }
 
     protected handleError(res: Response) {
         if (res && res.status === 401) {
-            console.error("Unauthenticated");
+            console.error('Unauthenticated');
             let r = this.onUnauthenticated();
-            return r || Observable.throw(new Error("Unauthenticated"));
+            return r || Observable.throw(new Error('Unauthenticated'));
         }
 
         let message = `Error status code ${res.status} at ${res.url}`;
-        if(res instanceof Response) {
+        if (res instanceof Response) {
             try {
                 let body = <any>res.json();
                 if(body && body.error) {
                     const error = body.error;
                     console.log(error);
-                    message = "<b>" + (error.message) + "</b>";
+                    message = '<b>' + (error.message) + '</b>';
                     if (error.errors) {
-                        message =  message + " :<br/>" + error.errors.map(m=>m.message).join('</br>');
+                        message =  message + ' :<br/>' + error.errors.map(m=>m.message).join('</br>');
                     }
                 }
             }
@@ -110,7 +118,7 @@ export abstract class <%= normalizeService(serviceName) %> {
 
         let hasQueryPoint = baseurl.includes("?");
         if (urlSegments) {
-            baseurl += "/";
+            baseurl += '/';
 
             let paths: Array<string> = urlSegments.filter((s: any) => typeof s === 'string');
 
@@ -163,12 +171,12 @@ export abstract class <%= normalizeService(serviceName) %> {
     * @params [optional] args - additional url parameters    
     */
     <%=normalizeMethod(method.verb)%>Entity<T>(data: <%= method.inputSchema %>, args?): Observable<T> {
-        return this.sendAction<T>("<%=method.verb%>", data, args);
+        return this.sendAction<T>('<%=method.verb%>', data, args);
     }
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
         let data = <%=p.args%>;
-        let response = this.sendAction<T>("<%=method.verb%>", data, args);
+        let response = this.sendAction<T>('<%=method.verb%>', data, args);
         return response;
     }
 <%_ } -%>    
