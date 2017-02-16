@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 interface VulcainResponse<T> {
     value: T;
-    status: "Success" | "Error" | "Pending";
+    status: 'Success' | 'Error' | 'Pending';
     error?: {
         message: string;
         errors?: Array<{message: string}>;
@@ -48,7 +48,8 @@ export abstract class <%= normalizeService(serviceName) %> {
             });
     }
 
-    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?): Observable<{page: number, total: number, values: T}> {
+    protected query<T>(verb: string, args?, page?: number, maxByPage?:number, query?)
+     : Observable<{page: number, total: number, values: T}> {
         if( page || maxByPage || query) {
             args = args || {};
             args.$page = page;
