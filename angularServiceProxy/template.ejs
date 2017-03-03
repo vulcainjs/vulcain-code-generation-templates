@@ -19,6 +19,7 @@ interface VulcainResponse<T> {
 * <%= model.description  || '.'%>
 */
 export class <%= model.name%> {
+    // tslint:disable-next-line:variable-name
     __schema?: string;
 <%_ for(let prop of model.properties) {
     if(prop.description) { _%>
@@ -35,9 +36,7 @@ export class <%= model.name%> {
 @Injectable()
 export class <%= normalizeService(serviceName) %> {
 
-    protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>';
-
-    constructor(public http: Http) {
+    constructor(public http: Http, protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>') {
     }
 
     protected httpOptions(): RequestOptions {
@@ -162,8 +161,8 @@ export class <%= normalizeService(serviceName) %> {
     */
 <%_ if( method.inputSchema) { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        const _data = <%=p.args%>;
-        return this.<%=normalizeMethod(method.verb)%>Entity<T>(_data, args);
+        const $data = <%=p.args%>;
+        return this.<%=normalizeMethod(method.verb)%>Entity<T>($data, args);
     }
 
     /**
@@ -176,8 +175,8 @@ export class <%= normalizeService(serviceName) %> {
     }
 <%_ } else { -%>
     <%=normalizeMethod(method.verb)%><T>(<%=p.params.join('')%> args?): Observable<T> {
-        const data = <%=p.args%>;
-        const response = this.sendAction<T>('<%=method.verb%>', data, args);
+        const $data = <%=p.args%>;
+        const response = this.sendAction<T>('<%=method.verb%>', $data, args);
         return response;
     }
 <%_ } 
