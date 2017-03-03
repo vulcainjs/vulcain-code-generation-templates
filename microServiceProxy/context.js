@@ -28,7 +28,7 @@ class Context {
                         self.serviceVersion = info.value.serviceVersion;
                         self.domain = info.value.domain;
 
-                        resolve(path.join("src", "generatedCode", self.camelCase(self.normalizeService(self.serviceName + self.serviceVersion)) + ".ts"));
+                        resolve(self.camelCase(self.normalizeService(self.serviceName + self.serviceVersion)) + ".ts");
                     }
                     else {
                         reject("Invalid service address : " + response.error.message);
