@@ -34,7 +34,6 @@ export class <%= model.name%> {
 <%_}_%>
 
 // Service proxy
-@Injectable()
 export class <%= normalizeService(serviceName) %> {
 
     constructor(public http: Http, protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>') {
