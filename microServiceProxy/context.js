@@ -63,7 +63,7 @@ class Context {
         const prefix = this.normalizeService(serviceName);
 
         let suffix = '';
-        parts = verb.split('.');
+        let parts = verb.split('.');
         parts[0] = verbPrefix ? verbPrefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
         if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
             suffix = parts[0];
