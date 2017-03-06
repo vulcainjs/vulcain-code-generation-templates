@@ -59,6 +59,23 @@ class Context {
         return name[0].toUpperCase() + name.substr(1);
     }
 
+    normalizeCommand(serviceName, verb) {
+        let parts = name.split(/[\._-]/);
+        let result = this.pascalCase(parts[0]);
+        for (let i = 1; i < parts.length; i++) {
+            result += this.pascalCase(parts[i]);
+        }
+        const prefix = result.replace(/-/g, '');
+        let suffix = '';
+        parts = name.split('.');
+        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
+        if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
+            suffix = parts[0];
+        else 
+            suffix = this.pascalCase(parts[1]);
+        return prefix + suffix;
+    }   
+    
     normalizeService(name) {
         let parts = name.split(/[\._-]/);
         let result = this.pascalCase(parts[0]);
