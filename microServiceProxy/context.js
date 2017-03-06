@@ -59,16 +59,17 @@ class Context {
         return name[0].toUpperCase() + name.substr(1);
     }
 
-    normalizeCommand(serviceName, verb) {
-        let parts = name.split(/[\._-]/);
+    createSpecificCommandName(serviceName, verb, verbPrefix) {
+        let parts = serviceName.split(/[\._-]/);
         let result = this.pascalCase(parts[0]);
         for (let i = 1; i < parts.length; i++) {
             result += this.pascalCase(parts[i]);
         }
         const prefix = result.replace(/-/g, '');
+
         let suffix = '';
-        parts = name.split('.');
-        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
+        parts = verb.split('.');
+        parts[0] = verbPrefix ? verbPrefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
         if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
             suffix = parts[0];
         else 

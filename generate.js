@@ -2,8 +2,8 @@ const fs = require('fs');
 const ejs = require('ejs');
 
 // Modify this for testing
-let uri = '';             // Service address
-let template = "angularServiceProxy"; // Template name
+let uri = 'http://...';             // Service address
+let template = "microServiceProxy"; // Template name
 
 // Generate code from template
 let templateFolder = './' + template;
@@ -17,7 +17,7 @@ try {
             let template = fs.readFileSync(templateFolder + "/template.ejs", "utf8");
             let txt = ejs.render(template, ctx);
             outputFile = 'generatedFile.ts';
-            
+
             fs.writeFile(outputFile, txt, (err) => {
                 if (err) {
                     console.log("Code generation error : " + err);
