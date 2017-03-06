@@ -106,7 +106,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params id string - unique id
     */
     async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%>): Promise<<%=method.outputSchema||"any"%>> {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'get') + "Command" %>');
+        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
@@ -132,11 +132,11 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'getAll')%>Async(<%= p.params.join('')%> query?, page?: number, maxByPage?: number): Promise<<%=method.outputSchema||"any"%>[]> {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'getAll') + "Command" %>');
+        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'GetAll') + "Command" %>');
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>(
+        const response = await command.executeAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -147,7 +147,7 @@ export class <%= normalizeService(serviceName) %> {
             page, 
             maxByPage
         );
-        return response.values;
+        return response;
     }
     <%_ } else { -%>
     /**
@@ -159,7 +159,7 @@ export class <%= normalizeService(serviceName) %> {
     * @params [optional] args - additional url parameters
     */
     async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'get') + "Command" %>');
+        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
@@ -172,18 +172,18 @@ export class <%= normalizeService(serviceName) %> {
             <%=p.args%>,
             args
         );
-        return response.values;
+        return response;
     }
 <%_ } else { -%>           
     * @params {number} page - Page to retrieve
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'get') + "Command" %>');
+        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<{page: number, total: number, values: <%=method.outputSchema||"any"%>[]}>(
+        const response = await command.executeAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -194,7 +194,7 @@ export class <%= normalizeService(serviceName) %> {
             page, 
             maxByPage
         );
-        return response.values;
+        return response;
     }
 <%_ } 
   }
