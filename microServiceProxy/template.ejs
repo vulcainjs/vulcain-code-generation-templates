@@ -40,7 +40,7 @@ export class <%= normalizeService(serviceName) %> {
     /**
     * 
     */
-    constructor(private context: RequestContext, apiKey?: string, apiKeyTenant=System.DefaultTenant) {
+    constructor(private context: RequestContext, apiKey?: string, apiKeyTenant=System.defaultTenant) {
         if(apiKey) {
             this.userContext = {apiKey, tenant: apiKeyTenant};
         }
