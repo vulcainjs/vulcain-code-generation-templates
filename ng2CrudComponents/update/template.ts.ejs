@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from  '@angular/router';
 import { Location } from '@angular/common';
 import { <%=currentService.schema%>Service, <%=currentService.schema%> } from 'path to service';
@@ -13,19 +13,30 @@ import { <%=currentService.schema%>Service, <%=currentService.schema%> } from 'p
         <%=currentService.schema%>Service
     ]
 })
-export class <%=currentService.schema%><%=currentService.action%>Component implements OnInit, AfterViewInit {
+export class <%=currentService.schema%><%=currentService.action%>Component implements OnInit, AfterViewInit, OnDestroy {
     id: string;
     entity: <%=currentService.schema%>;
+    sub: 
 
     constructor(private service: <%=currentService.schema%>Service, private location: Location, private route: ActivatedRoute) {
         this.entity = new <%=currentService.schema%>();
     }
     
     ngOnInit() {
-         this.route.params.subscribe(params => {
+        this.sub = this.route.params.subscribe(params => {
             this.id = params['id'];
             this.loadEntity();
         });
+    }
+
+    ngAfterViewInit() {
+
+    }
+
+    ngOnDestroy() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
     }
 
     private loadEntity() {
