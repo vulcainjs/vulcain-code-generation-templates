@@ -1,0 +1,22 @@
+<form (ngSubmit)="delete()" #<%=context.normalize(currentService.schema)%>Form="ngForm">
+    <div>
+        You are about to delete this <%=currentService.schema%>
+    </div>
+    <%
+        // TODO: switch HTML tag based on property type (datetime -> date time picker, boolean -> checkbox...)
+    %>
+    <%- context.properties(currentService).map(p => `
+        <md-input-container class="demo-full-width">
+            <input mdInput #deleteEntity${p.name} [(ngModel)]="entity.${p.name}" placeholder="${p.name}" name="${p.name}" readonly>
+        </md-input-container>
+        `).join('') %>
+
+    <button md-button (click)="cancel()">
+        <md-icon mat-grid-avatar>cancel</md-icon>
+        Cancel
+    </button>    
+    <button md-button type="submit" >
+        <md-icon mat-grid-avatar>delete</md-icon>
+        Delete
+    </button>
+</form>

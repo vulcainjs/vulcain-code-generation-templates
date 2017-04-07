@@ -1,0 +1,26 @@
+<md-grid-list cols="2">
+    <md-grid-tile>
+        <a md-button [routerLink]="[ './', 'create' ]">
+            <md-icon mat-grid-avatar>create_new_folder</md-icon>
+            Create new
+        </a>
+    </md-grid-tile>
+    <md-grid-tile *ngFor="let item of items">
+        
+        <%- context.properties(currentService).map(p => `
+            <div>
+                <label>${p.name}</label>
+                <label>{{item.${p.name}}}</label>
+            </div>
+            `).join('') %>
+
+        <a md-button [routerLink]="[ './', 'edit', item.id ]">
+            <md-icon mat-grid-avatar>create</md-icon>
+            Edit
+        </a>
+        <a md-button [routerLink]="[ './', 'delete', item.id ]">
+            <md-icon mat-grid-avatar>delete</md-icon>
+            Delete
+        </a>
+    </md-grid-tile>
+</md-grid-list>
