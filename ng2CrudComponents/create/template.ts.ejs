@@ -1,26 +1,26 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { <%=currentService.schema%>Service, <%=currentService.schema%> } from 'path to service';
+import { <%=data.schema%>Service, <%=data.schema%> } from 'path to service';
 
 @Component({
-    selector: 'app-<%=context.normalize(currentService.schema)%>-<%=currentService.action%>',
-    templateUrl: './<%=context.normalize(currentService.schema)%>-<%=currentService.action%>.component.html',
+    selector: 'app-<%=context.normalize(data.schema)%>-<%=data.action%>',
+    templateUrl: './<%=context.normalize(data.schema)%>-<%=data.action%>.component.html',
     styleUrls: [
-        './<%=context.normalize(currentService.schema)%>-<%=currentService.action%>.component.scss'
+        './<%=context.normalize(data.schema)%>-<%=data.action%>.component.scss'
     ],
     providers: [ 
-        <%=currentService.schema%>Service
+        <%=data.schema%>Service
     ]
 })
-export class <%=currentService.schema%><%=currentService.action%>Component implements OnInit, AfterViewInit {
-    entity: <%=currentService.schema%>;
+export class <%=data.schema%><%=data.action%>Component implements OnInit, AfterViewInit {
+    entity: <%=data.schema%>;
 
-    constructor(private service: <%=currentService.schema%>Service, private location: Location) {
+    constructor(private service: <%=data.schema%>Service, private location: Location) {
     
     }
     
     ngOnInit() {
-        this.entity = new <%=currentService.schema%>();
+        this.entity = new <%=data.schema%>();
     }
 
     ngAfterViewInit() {
@@ -28,7 +28,7 @@ export class <%=currentService.schema%><%=currentService.action%>Component imple
     }
 
     create() {
-        this.service.<%=context.normalizeMethod(currentService.verb)%>Entity(this.entity).subscribe(s => {
+        this.service.<%=context.normalizeMethod(data.verb)%>Entity(this.entity).subscribe(s => {
             this.location.back();
         });
     }

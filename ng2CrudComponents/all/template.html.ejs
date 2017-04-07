@@ -7,7 +7,7 @@
     </md-grid-tile>
     <md-grid-tile *ngFor="let item of items">
         
-        <%- context.properties(currentService).map(p => `
+        <%- context.properties(data).map(p => `
             <div>
                 <label>${p.name}</label>
                 <label>{{item.${p.name}}}</label>

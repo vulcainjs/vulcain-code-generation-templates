@@ -1,14 +1,14 @@
-<form (ngSubmit)="create()" #<%=context.normalize(currentService.schema)%>Form="ngForm">
+<form (ngSubmit)="create()" #<%=context.normalize(data.schema)%>Form="ngForm">
     <%
         // TODO: switch HTML tag based on property type (datetime -> date time picker, boolean -> checkbox...)
     %>
-    <%- context.properties(currentService).map(p => `
+    <%- context.properties(data).map(p => `
         <md-input-container class="demo-full-width">
             <input mdInput #newEntity${p.name} [(ngModel)]="entity.${p.name}" name="${p.name}" placeholder="${p.name}" >
         </md-input-container>
         `).join('') %>
     
-    <button md-button type="submit" [disabled]="!<%=context.normalize(currentService.schema)%>Form.form.valid">
+    <button md-button type="submit" [disabled]="!<%=context.normalize(data.schema)%>Form.form.valid">
         <md-icon mat-grid-avatar>create_new_folder</md-icon>
             Create
     </button>

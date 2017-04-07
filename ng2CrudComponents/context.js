@@ -143,7 +143,7 @@ class Context {
 
     generateCustomTemplate(service, templateSource, outputFile) {
         let template = fs.readFileSync(templateSource, 'utf8');
-        let txt = ejs.render(template, { context: this, currentService: service });
+        let txt = ejs.render(template, { context: this, data: service });
 
         // ensure folder exists
         outputFile.split('/').slice(0, -1).reduce((prev, curr, i) => {
@@ -165,17 +165,36 @@ class Context {
 
     }
 
+    toPath(service) {
+        switch(service.action) {
+            case 'create':
+                return `${this.normalize(service.schema)}/create`
+            case 'update':
+                return `${this.normalize(service.schema)}/:id`
+            case 'delete':
+                return `${this.normalize(service.schema)}/delete/:id`
+            case 'all':
+                return `${this.normalize(service.schema)}`
+            default:
+                throw new Error(service.action + ' is not crud');
+        }
+    }
+
     isCrud(s) {
         return (s.kind === 'action' && (s.action === 'create' || s.action === 'update' || s.action === 'delete' )) ||
                (s.kind === 'query' && s.action === 'all');
     }
 
     generateCrudTemplates() {
-        for(let service of this.services.filter(s => this.isCrud(s))) {
+        const crudServices = this.services.filter(s => this.isCrud(s));
+        for(let service of crudServices) {
             this.generateCustomTemplate(service, `./ng2CrudComponents/${service.action}/template.ts.ejs`, `./out/${this.normalize(service.schema)}/${this.normalize(service.schema)}-${service.action}.component.ts`);
             this.generateCustomTemplate(service, `./ng2CrudComponents/${service.action}/template.html.ejs`, `./out/${this.normalize(service.schema)}/${this.normalize(service.schema)}-${service.action}.component.html`);
             this.generateCustomTemplate(service, `./ng2CrudComponents/${service.action}/template.scss.ejs`, `./out/${this.normalize(service.schema)}/${this.normalize(service.schema)}-${service.action}.component.scss`);
         }
+
+        // generate route module
+        this.generateCustomTemplate(crudServices, `./ng2CrudComponents/route.template.ts.ejs`, `./out/crud.routes.ts`);
     }
 
 }

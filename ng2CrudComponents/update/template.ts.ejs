@@ -1,25 +1,25 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from  '@angular/router';
 import { Location } from '@angular/common';
-import { <%=currentService.schema%>Service, <%=currentService.schema%> } from 'path to service';
+import { <%=data.schema%>Service, <%=data.schema%> } from 'path to service';
 
 @Component({
-    selector: 'app-<%=context.normalize(currentService.schema)%>-<%=currentService.action%>',
-    templateUrl: './<%=context.normalize(currentService.schema)%>-<%=currentService.action%>.component.html',
+    selector: 'app-<%=context.normalize(data.schema)%>-<%=data.action%>',
+    templateUrl: './<%=context.normalize(data.schema)%>-<%=data.action%>.component.html',
     styleUrls: [
-        './<%=context.normalize(currentService.schema)%>-<%=currentService.action%>.component.scss'
+        './<%=context.normalize(data.schema)%>-<%=data.action%>.component.scss'
     ],
     providers: [
-        <%=currentService.schema%>Service
+        <%=data.schema%>Service
     ]
 })
-export class <%=currentService.schema%><%=currentService.action%>Component implements OnInit, AfterViewInit, OnDestroy {
+export class <%=data.schema%><%=data.action%>Component implements OnInit, AfterViewInit, OnDestroy {
     id: string;
-    entity: <%=currentService.schema%>;
+    entity: <%=data.schema%>;
     sub: 
 
-    constructor(private service: <%=currentService.schema%>Service, private location: Location, private route: ActivatedRoute) {
-        this.entity = new <%=currentService.schema%>();
+    constructor(private service: <%=data.schema%>Service, private location: Location, private route: ActivatedRoute) {
+        this.entity = new <%=data.schema%>();
     }
     
     ngOnInit() {
@@ -40,13 +40,13 @@ export class <%=currentService.schema%><%=currentService.action%>Component imple
     }
 
     private loadEntity() {
-        this.service.<%=context.normalizeMethod(currentService.verb, 'get')%><<%=currentService.schema%>>(this.id).subscribe(e => {
+        this.service.<%=context.normalizeMethod(data.verb, 'get')%><<%=data.schema%>>(this.id).subscribe(e => {
             this.entity = e;
         });
     }
 
     update() {
-        this.service.<%=context.normalizeMethod(currentService.verb)%>Entity(this.entity).subscribe(s => {
+        this.service.<%=context.normalizeMethod(data.verb)%>Entity(this.entity).subscribe(s => {
             this.location.back();
         });
     }

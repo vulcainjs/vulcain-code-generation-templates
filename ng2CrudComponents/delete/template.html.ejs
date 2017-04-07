@@ -1,11 +1,11 @@
-<form (ngSubmit)="delete()" #<%=context.normalize(currentService.schema)%>Form="ngForm">
+<form (ngSubmit)="delete()" #<%=context.normalize(data.schema)%>Form="ngForm">
     <div>
-        You are about to delete this <%=currentService.schema%>
+        You are about to delete this <%=data.schema%>
     </div>
     <%
         // TODO: switch HTML tag based on property type (datetime -> date time picker, boolean -> checkbox...)
     %>
-    <%- context.properties(currentService).map(p => `
+    <%- context.properties(data).map(p => `
         <md-input-container class="demo-full-width">
             <input mdInput #deleteEntity${p.name} [(ngModel)]="entity.${p.name}" placeholder="${p.name}" name="${p.name}" readonly>
         </md-input-container>
