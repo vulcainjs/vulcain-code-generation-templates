@@ -11,5 +11,5 @@ vulcain create --template microServiceProxy --uri <service address>
 |----------|-------------|
 | microServiceProxy | Node proxy class for calling another vulcain microservice |
 | angularServiceProxy | Angular service for calling vulcain microservice |
-| ngCrudComponnents | Angular 2 components for CRUD operations (using Material2) |
+| ngCrudComponents | Angular 2 components for CRUD operations (using Material2) |
 
