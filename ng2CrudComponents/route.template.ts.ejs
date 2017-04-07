@@ -1,0 +1,21 @@
+import { RouterModule, Routes, Router } from '@angular/router';
+import { NgModule } from '@angular/core';
+
+<% data.map(service => {%>
+import { <%=service.schema%><%=service.action%>Component } from './<%=context.normalize(service.schema)%>/<%=context.normalize(service.schema)%>-<%=service.action%>.component';<%}) %>
+
+export const routes: Routes = [
+    <% data.map(service => {%>
+        { path: '<%= context.toPath(service) %>', component: <%=service.schema%><%=service.action%>Component },<%})%>
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(routes)
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+export class CrudRouteModule {
+}

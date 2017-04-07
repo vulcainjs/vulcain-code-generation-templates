@@ -1,0 +1,19 @@
+<form (ngSubmit)="update()" #<%=context.normalize(data.schema)%>Form="ngForm">
+    <%
+        // TODO: switch HTML tag based on property type (datetime -> date time picker, boolean -> checkbox...)
+    %>
+    <%- context.properties(data).map(p => `
+        <md-input-container class="demo-full-width">
+            <input mdInput #updateEntity${p.name} [(ngModel)]="entity.${p.name}" placeholder="${p.name}" name="${p.name}" ${p.metadata.required ? 'required' : ''} ${p.metadata.isKey ? 'readonly' : ''}>
+        </md-input-container>
+        `).join('') %>
+
+    <button md-button (click)="cancel()">
+        <md-icon mat-grid-avatar>cancel</md-icon>
+        Cancel
+    </button>
+    <button md-button type="submit" [disabled]="!<%=context.normalize(data.schema)%>Form.form.valid">
+        <md-icon mat-grid-avatar>create_new_folder</md-icon>
+        Update
+    </button>
+</form>

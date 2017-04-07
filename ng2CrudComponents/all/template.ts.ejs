@@ -1,0 +1,28 @@
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { <%=data.schema%>Service } from 'path to service';
+
+@Component({
+    selector: 'app-<%=context.normalize(data.schema)%>-<%=data.action%>',
+    templateUrl: './<%=context.normalize(data.schema)%>-<%=data.action%>.component.html',
+    styleUrls: [
+        './<%=context.normalize(data.schema)%>-<%=data.action%>.component.scss'
+    ],
+    providers: [
+        <%=data.schema%>Service
+    ]
+})
+export class <%=data.schema%><%=data.action%>Component implements OnInit, AfterViewInit {
+
+    items: <%=data.schema%>[];
+    constructor(private service: <%=data.schema%>Service) {
+
+    }
+
+    ngOnInit() {
+        this.service.<%=context.normalizeMethod(data.verb, 'getAll')%>().subscribe(r => this.items = <<%=data.schema%>[]>r.values);
+    }
+
+    ngAfterViewInit() {
+
+    }
+}

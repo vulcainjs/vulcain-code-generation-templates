@@ -1,0 +1,35 @@
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { <%=data.schema%>Service, <%=data.schema%> } from 'path to service';
+
+@Component({
+    selector: 'app-<%=context.normalize(data.schema)%>-<%=data.action%>',
+    templateUrl: './<%=context.normalize(data.schema)%>-<%=data.action%>.component.html',
+    styleUrls: [
+        './<%=context.normalize(data.schema)%>-<%=data.action%>.component.scss'
+    ],
+    providers: [ 
+        <%=data.schema%>Service
+    ]
+})
+export class <%=data.schema%><%=data.action%>Component implements OnInit, AfterViewInit {
+    entity: <%=data.schema%>;
+
+    constructor(private service: <%=data.schema%>Service, private location: Location) {
+    
+    }
+    
+    ngOnInit() {
+        this.entity = new <%=data.schema%>();
+    }
+
+    ngAfterViewInit() {
+
+    }
+
+    create() {
+        this.service.<%=context.normalizeMethod(data.verb)%>Entity(this.entity).subscribe(s => {
+            this.location.back();
+        });
+    }
+}
