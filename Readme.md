@@ -4,7 +4,7 @@ usage in the root project directory.
 
 
 ```js
-vulcain create --template microServiceProxy --uri <service address>
+vulcain generate --template microServiceProxy --address <service address>
 ```
 
 | template | Description |
