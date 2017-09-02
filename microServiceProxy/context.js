@@ -72,14 +72,16 @@ class Context {
         return prefix + suffix;
     }   
     
+    // name = schema.action or action
     normalizeMethod(name, prefix) {
-        let parts = name.split('.');
-        parts[0] = prefix ? prefix + this.pascalCase(parts[0]) : this.camelCase(parts[0])
-        if (parts.length === 1 || (parts[1].toLowerCase() === "all" || parts[1].toLowerCase() === "get"))
-            return parts[0];
+        let [schema, action] = name.split('.');
+        
+        schema = prefix ? prefix + this.pascalCase(schema) : this.camelCase(schema);
 
-        parts[1] = this.pascalCase(parts[1]);
-        return parts[0] + parts[1];
+        if (!action || (action.toLowerCase() === "all" || action.toLowerCase() === "get"))
+            return schema;
+
+        return this.camelCase(action) + this.pascalCase(schema);
     }
     
     normalizeService(name) {

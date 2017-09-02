@@ -70,7 +70,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'action', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -88,7 +88,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'action', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -110,7 +110,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'get', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -136,7 +136,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>[]>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -163,7 +163,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'get', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
@@ -183,7 +183,7 @@ export class <%= normalizeService(serviceName) %> {
         if( !command ) {
             command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.executeAsync<<%=method.outputSchema||"any"%>[]>(
+        const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
             <%= normalizeService(serviceName) %>.serviceName, 
             <%= normalizeService(serviceName) %>.serviceVersion, 
