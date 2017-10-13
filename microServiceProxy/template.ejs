@@ -35,14 +35,14 @@ export class <%= normalizeService(serviceName) %> {
 
     private static serviceName = "<%=serviceName%>";
     private static serviceVersion = "<%=serviceVersion%>";
-    private userContext: {apiKey: string, tenant: string};
+    private userContext: {authorization: string, tenant: string};
 
     /**
     * 
     */
-    constructor(private context: IRequestContext, apiKey?: string, apiKeyTenant=System.defaultTenant) {
-        if(apiKey) {
-            this.userContext = {apiKey, tenant: apiKeyTenant};
+    constructor(private context: IRequestContext, authorization?: string, authorizationTenant=System.defaultTenant) {
+        if(authorization) {
+            this.userContext = {authorization, tenant: authorizationTenant};
         }
     }
 <%_ for(let method of services) {
@@ -66,9 +66,9 @@ export class <%= normalizeService(serviceName) %> {
     * @params [optional] args - additional url parameters
     */
     async <%=normalizeMethod(method.verb)%>EntityAsync(data: <%= method.inputSchema %>, args?): Promise<<%=method.outputSchema||"any"%>> {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'action', 
@@ -84,9 +84,9 @@ export class <%= normalizeService(serviceName) %> {
 <%_ } else { -%>
     async <%=normalizeMethod(method.verb)%>Async(<%=p.params.join('')%> args?): Promise<<%=method.outputSchema||"any"%>> {
         const $data = <%=p.args%>;
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'action', 
@@ -106,9 +106,9 @@ export class <%= normalizeService(serviceName) %> {
     * @params id string - unique id
     */
     async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%>): Promise<<%=method.outputSchema||"any"%>> {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'get', 
@@ -132,9 +132,9 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'getAll')%>Async(<%= p.params.join('')%> query?, page?: number, maxByPage?: number): Promise<<%=method.outputSchema||"any"%>[]> {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'GetAll') + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb, 'GetAll') + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
@@ -159,9 +159,9 @@ export class <%= normalizeService(serviceName) %> {
     * @params [optional] args - additional url parameters
     */
     async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
             'get', 
@@ -179,9 +179,9 @@ export class <%= normalizeService(serviceName) %> {
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'get')%>Async(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-        let command = await this.context.getCommandAsync('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = await this.context.getCommandAsync('<%=normalizeService(serviceName) + "Command" %>');
+            command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
         const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
             'query', 
