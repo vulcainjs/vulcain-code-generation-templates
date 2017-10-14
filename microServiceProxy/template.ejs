@@ -46,6 +46,8 @@ export class <%= normalizeService(serviceName) %>Proxy {
         }
     }
 <%_ for(let method of services) {
+    if(method.verb[0] == "_")
+        continue;
     let p = arguments(method);
     if( method.kind == "action") { -%>
     /**
