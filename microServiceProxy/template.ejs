@@ -72,12 +72,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
-            'action', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
+        const response = await command.execActionAsync<<%=method.outputSchema||"any"%>>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            this.userContext,
             '<%=method.verb%>', 
-            this.userContext, 
             data, 
             args
         );
@@ -90,12 +89,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
-            'action', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
-            '<%=method.verb%>', 
+        const response = await command.execActionAsync<<%=method.outputSchema||"any"%>>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
+            '<%=method.verb%>', 
             $data, 
             args
         );
@@ -112,12 +110,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
-            'get', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
-            '<%=method.verb%>', 
+        const response = await command.execGetAsync<<%=method.outputSchema||"any"%>>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
+            '<%=method.verb%>', 
             id,
             <%=p.args%>
         );
@@ -138,12 +135,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
-            'query', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
-            '<%=method.verb%>', 
+        const response = await command.execQueryAsync<<%=method.outputSchema||"any"%>[]>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
+            '<%=method.verb%>', 
             query, 
             <%=p.args%>, 
             page, 
@@ -165,12 +161,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>>(
-            'get', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
-            '<%=method.verb%>', 
+        const response = await command.execGetAsync<<%=method.outputSchema||"any"%>>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
+            '<%=method.verb%>', 
             <%=p.args%>,
             args
         );
@@ -185,12 +180,11 @@ export class <%= normalizeService(serviceName) %>Proxy {
         if( !command ) {
             command = this.context.getCommand<<%=normalizeService(serviceName) + "Command" %>>('<%=normalizeService(serviceName) + "Command" %>');
         }
-        const response = await command.runAsync<<%=method.outputSchema||"any"%>[]>(
-            'query', 
-            <%= normalizeService(serviceName) %>.serviceName, 
-            <%= normalizeService(serviceName) %>.serviceVersion, 
-            '<%=method.verb%>', 
+        const response = await command.execQueryAsync<<%=method.outputSchema||"any"%>[]>(
+            <%= normalizeService(serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
+            '<%=method.verb%>', 
             <%=p.args%>, 
             null,
             page, 
