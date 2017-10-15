@@ -114,7 +114,6 @@ export class <%= normalizeService(serviceName) %>Proxy {
             <%= normalizeService(serviceName) %>Proxy.serviceName, 
             <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
-            '<%=method.verb%>', 
             id,
             <%=p.args%>
         );
@@ -165,7 +164,6 @@ export class <%= normalizeService(serviceName) %>Proxy {
             <%= normalizeService(serviceName) %>Proxy.serviceName, 
             <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
-            '<%=method.verb%>', 
             <%=p.args%>,
             args
         );
