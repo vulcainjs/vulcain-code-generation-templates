@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    serviceName: <%= options.serviceName %>
+    serviceVersion: "<%= options.serviceVersion %>"
+  name: <%= options.fullName %>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      serviceName: <%= options.serviceName %>
+      serviceVersion: "<%= options.serviceVersion %>"
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        serviceName: <%= options.serviceName %>
+        serviceVersion: "<%= options.serviceVersion %>"
+    spec:
+      containers:
+        - image: <%= options.image %>
+          name: <%= options.serviceName %>
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 1
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: <%= options.fullName %>
+spec:
+  ports:
+    # Accept traffic sent to port 80
+    - name: http
+      port: 8080
+  selector:
+      serviceName: <%= options.serviceName %>
+      serviceVersion: "<%= options.serviceVersion %>"
+  type: NodePort

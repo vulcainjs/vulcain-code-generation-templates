@@ -1,0 +1,22 @@
+# ---------------------------------------------------
+# Final image
+# ---------------------------------------------------
+FROM node:8-alpine
+ARG Source
+
+EXPOSE 8080
+
+# Replace with the service name
+ENV VULCAIN_SERVICE_NAME=<%= options.serviceName %>
+ENV VULCAIN_SERVICE_VERSION=<%= options.serviceVersion %>
+
+HEALTHCHECK --interval=10s --timeout=1s CMD curl -f http://localhost:8080/health || exit 1
+
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+
+COPY {Source:-$(pwd)}/*.js /app/bin/
+
+ENTRYPOINT ["node"]
+CMD ["bin/index.js"]
