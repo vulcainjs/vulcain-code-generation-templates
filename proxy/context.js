@@ -10,6 +10,10 @@ class Context {
     init(options) {
         let self = this;
         return new Promise((resolve, reject) => {
+            if (!options.address) {
+                reject("You must provide a service address with --args address=xxx");
+                return;
+            }
             try {
                 let request = rest.get(options.address)
                     .header('Accept', 'application/json')
