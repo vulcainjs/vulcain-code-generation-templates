@@ -12,3 +12,4 @@ class Context {
         });
     }
 }
+exports.Context = Context;
