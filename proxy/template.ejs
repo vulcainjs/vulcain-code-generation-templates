@@ -1,4 +1,4 @@
-import { System, ServiceDependency, Command, IRequestContext, AbstractServiceCommand, Model,
+import { Service, ServiceDependency, Command, IRequestContext, AbstractServiceCommand, Model,
 Property, Reference, CommandFactory } from 'vulcain-corejs';
 
 //
@@ -45,7 +45,7 @@ export class <%= normalizeService(serviceName) %>Proxy {
     /**
     * 
     */
-    constructor(private context: IRequestContext, authorization?: string, authorizationTenant=System.defaultTenant) {
+    constructor(private context: IRequestContext, authorization?: string, authorizationTenant=Service.defaultTenant) {
         if(authorization) {
             this.userContext = {authorization, tenant: authorizationTenant};
         }
