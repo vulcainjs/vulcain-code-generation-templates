@@ -44,12 +44,38 @@ class Context {
         });
     }
 
+    getFieldComponent(prop) {
+        if (prop.custom && prop.custom.reference) {
+            return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
+                <TextField source="${prop.custom.referenceField} />"
+            </ReferenceField>`;
+        }
+        return `<TextField source="${prop.name}"/>`;
+    }
+
+    getInputComponent(schema, prop, editMode) {
+        var opts = prop.required ? " validate={[required ]}" : "";
+        if (prop.name === schema.idProperty) {        
+            if (prop.metadata.type === "uid" && !editMode)
+                return "";
+            
+            if(editMode) return `<DisabledInput source="${prop.name}" ${opts}/>`;
+        } 
+
+        if (prop.custom && prop.custom.reference) {
+            return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
+                <TextField source="${prop.custom.referenceField} />"
+            </ReferenceField>`;
+        }
+
+        return `<TextField source="${prop.name}"  ${opts}/>`;
+    }
+
     sendRequest(request) {
         return new Promise((resolve) => {
             request.end(resolve);
         })
     }
-
     
     prepareSchemas(services, schemas) {
         let result = {};

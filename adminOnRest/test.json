@@ -1,7 +1,7 @@
 {
     "meta": {
         "total": 0,
-        "correlationId": "ba4efc86a5bbc05c"
+        "correlationId": "44c29a1fcbf1ef45"
     },
     "value": {
         "services": [
@@ -89,6 +89,29 @@
                 "scope": "?",
                 "async": false,
                 "outputSchema": "Customer"
+            },
+            {
+                "schema": "HopexInstance",
+                "kind": "get",
+                "verb": "hopexinstance.get",
+                "outputType": "one",
+                "description": "Get an entity by id",
+                "action": "get",
+                "scope": "?",
+                "async": false,
+                "inputSchema": "string",
+                "outputSchema": "HopexInstance"
+            },
+            {
+                "schema": "HopexInstance",
+                "kind": "query",
+                "verb": "hopexinstance.all",
+                "outputType": "many",
+                "description": "Get all entities",
+                "action": "all",
+                "scope": "?",
+                "async": false,
+                "outputSchema": "HopexInstance"
             }
         ],
         "schemas": [
@@ -96,18 +119,22 @@
                 "name": "Customer",
                 "properties": [
                     {
-                        "name": "lastName",
+                        "name": "language",
                         "type": "string",
                         "order": 0,
                         "required": true,
                         "typeDescription": "Must be a string",
                         "metadata": {
-                            "type": "string",
+                            "type": "enum",
+                            "values": [
+                                "FR",
+                                "EN"
+                            ],
                             "required": true
                         }
                     },
                     {
-                        "name": "firstName",
+                        "name": "name",
                         "type": "string",
                         "order": 0,
                         "required": true,
@@ -128,6 +155,94 @@
                         "metadata": {
                             "type": "uid",
                             "isKey": true
+                        }
+                    }
+                ],
+                "idProperty": "id"
+            },
+            {
+                "name": "HopexInstance",
+                "properties": [
+                    {
+                        "name": "databaseImage",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "hopexImage",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "domain",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "enum",
+                            "values": [
+                                "FR",
+                                "EN"
+                            ],
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "customerId",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "custom": {
+                            "reference": "Customer",
+                            "referenceField": "name"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "type": "string",
+                        "order": 0,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "uid",
+                            "isKey": true
+                        }
+                    },
+                    {
+                        "name": "instance",
+                        "type": "number",
+                        "order": 0,
+                        "typeDescription": "Must be a number.",
+                        "metadata": {
+                            "type": "number"
                         }
                     }
                 ],

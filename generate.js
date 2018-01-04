@@ -3,16 +3,16 @@ const ejs = require('ejs');
 
 // Modify this for testing
 let uri = 'http://localhost:8080';             // Service address
-let template = "admin-on-rest";// "microServiceProxy"; // Template name
+let template = "adminonrest";// "microServiceProxy"; // Template name
 
 // Generate code from template
 let templateFolder = './' + template;
 try {
     let Context = require(templateFolder + '/context').Context;
     let ctx = new Context();
-    ctx.discoveryAddress = uri + "/api/_servicedescription";
+    ctx.address = uri + "/api/_servicedescription";
 
-    ctx.init({ discoveryAddress: ctx.discoveryAddress })
+    ctx.init({ address: ctx.address })
         .then((outputFile) => {
             let template = fs.readFileSync(templateFolder + "/template.ejs", "utf8");
             let txt = ejs.render(template, ctx);
