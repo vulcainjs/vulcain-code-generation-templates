@@ -31,7 +31,7 @@ class Context {
                         }
                         self.schemas = self.prepareSchemas(info.value.services, info.value.schemas);
 
-                        resolve(self.camelCase(self.normalizeService(self.serviceName)) + ".js");
+                        resolve(self.camelCase(self.normalizeService(info.value.serviceName)) + ".js");
                     }
                     else {
                         reject("Invalid service address : " + response.error.message);
