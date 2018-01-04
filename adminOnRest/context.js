@@ -53,6 +53,9 @@ class Context {
         if (prop.metadata.type === "enum") {
             return `<ChipField source="${prop.name}" />`;            
         }
+        if (prop.metadata.type === "date") {
+            return `<DateField source="${prop.name}" />`;            
+        }
 
         if(prop.type === "number")
             return `<NumberField source="${prop.name}" />`;
@@ -75,7 +78,11 @@ class Context {
             </ReferenceInput>`;
         }
         if (prop.metadata.type === "enum") {
-            return `<SelectInput source="${prop.name}" choices=${JSON.stringify(prop.metadata.values)}/>`;            
+            return `<SelectInput source="${prop.name}" choices={${JSON.stringify(prop.metadata.values)}} />`;            
+        }
+
+        if (prop.metadata.type === "date") {
+            return `<DateInput source="${prop.name}" />`;            
         }
 
         if(prop.type === "number")
