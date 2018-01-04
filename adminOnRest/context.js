@@ -84,7 +84,7 @@ class Context {
             return html;
         }
         if (prop.metadata.type === "enum") {
-            let choices = prop.metadata.values.map(c => { id: c; name: c });
+            let choices = prop.metadata.values.map(c => { return { id: c, name: c }; });
             return `<SelectInput source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
         }
 
