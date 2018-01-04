@@ -63,12 +63,12 @@ class Context {
         } 
 
         if (prop.custom && prop.custom.reference) {
-            return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
-                <TextField source="${prop.custom.referenceField}" />
-            </ReferenceField>`;
+            return `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}" ${prop.required ? "" : "allowEmpty"}>
+                <TextInput source="${prop.custom.referenceField}" />
+            </ReferenceInput>`;
         }
 
-        return `<TextField source="${prop.name}"  ${opts}/>`;
+        return `<TextInput source="${prop.name}"  ${opts}/>`;
     }
 
     sendRequest(request) {

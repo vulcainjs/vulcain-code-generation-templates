@@ -1,6 +1,8 @@
 import React from 'react';
-import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, 
-    DateField, EditButton } from 'admin-on-rest';
+// eslint-disable-next-line
+import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, List, ReferenceField } from 'admin-on-rest';
+
+const required = value => value ? undefined : 'Required';
 
 <% Object.keys(schemas).forEach( schemaName => { 
     let schema = schemas[schemaName];
