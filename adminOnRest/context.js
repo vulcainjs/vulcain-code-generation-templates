@@ -50,6 +50,10 @@ class Context {
                 <TextField source="${prop.custom.referenceField}" />
             </ReferenceField>`;
         }
+        if (prop.metadata.type === "enum") {
+            return `<ChipField source="${prop.name}" />`;            
+        }
+
         if(prop.type === "number")
             return `<NumberField source="${prop.name}" />`;
         
@@ -70,6 +74,10 @@ class Context {
                 <SelectInput source="${prop.custom.referenceField}" />
             </ReferenceInput>`;
         }
+        if (prop.metadata.type === "enum") {
+            return `<SelectInput source="${prop.name}" choices=${JSON.stringify(prop.metadata.values)}/>`;            
+        }
+
         if(prop.type === "number")
             return `<NumberInput source="${prop.name}"  ${opts}/>`;
         
