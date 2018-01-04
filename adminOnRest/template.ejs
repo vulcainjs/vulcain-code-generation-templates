@@ -1,6 +1,6 @@
 import React from 'react';
 // eslint-disable-next-line
-import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, List, ReferenceField, ReferenceInput, SelectInput, NumberField, NumberInput, DateField, DateInput, ChipField } from 'admin-on-rest';
+import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, List, ReferenceField, ReferenceInput, SelectInput, NumberField, NumberInput, ChipField } from 'admin-on-rest';
 
 const required = value => value ? undefined : 'Required';
 
@@ -13,6 +13,7 @@ export const <%=schemaName%>List = (props) => (
             <% for(let prop of schema.properties) { %>
             <%- getFieldComponent(prop) %>
             <% } %>
+            <EditButton/>
         </Datagrid>
     </List>
 );

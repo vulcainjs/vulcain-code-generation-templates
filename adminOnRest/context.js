@@ -73,9 +73,15 @@ class Context {
         } 
 
         if (prop.custom && prop.custom.reference) {
-            return `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}" ${prop.required && !editMode ? "" : "allowEmpty"}>
+            var html = `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" 
+                    reference="${prop.custom.reference}" ${prop.required && !editMode ? "" : "allowEmpty"} `;
+            if (prop.custom.referenceFilter) {
+                html += `{${JSON.stringify(prop.custom.referenceFilter)}}`
+            }
+            html += `>
                 <SelectInput source="${prop.custom.referenceField}" />
             </ReferenceInput>`;
+            return html;
         }
         if (prop.metadata.type === "enum") {
             return `<SelectInput source="${prop.name}" choices={${JSON.stringify(prop.metadata.values)}} />`;            
