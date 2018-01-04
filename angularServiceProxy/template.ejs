@@ -35,7 +35,7 @@ export class <%= model.name%> {
 // Service proxy
 export class <%= normalizeService(serviceName) %> {
 
-    constructor(public http: Http, protected baseUrl = '<%= discoveryAddress.substr(0, discoveryAddress.indexOf('_')) %>') {
+    constructor(public http: Http, protected baseUrl = '<%= address.substr(0, address.indexOf('_')) %>') {
     }
 
     protected httpOptions(): RequestOptions {

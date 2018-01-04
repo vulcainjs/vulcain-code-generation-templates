@@ -4,14 +4,14 @@ const rest = require('unirest');
 class Context {
 
     prompts() {
-        return [{ name: 'discoveryAddress', type: 'list', message: 'Select service', lookup: 'service.all' }];
+        return [{ name: 'address', type: 'list', message: 'Select service', lookup: 'service.all' }];
     }
 
     init(options) {
         let self = this;
         return new Promise((resolve, reject) => {
             try {
-                let request = rest.get(options.discoveryAddress)
+                let request = rest.get(options.address)
                     .header('Accept', 'application/json')
                     .type("json");
 
