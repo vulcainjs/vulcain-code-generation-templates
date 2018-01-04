@@ -1,0 +1,49 @@
+import React from 'react';
+import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, 
+    DateField, EditButton } from 'admin-on-rest';
+import RichTextInput from 'aor-rich-text-input';
+
+<% Object.keys(schemas).forEach( schemaName => { 
+    let schema = schemas[schemaName];
+_%>
+export const <%=schemaName%>List = (props) => (
+    <List title="<%=schemaName%> list" {...props}>
+        <Datagrid>
+            <% for(let prop of schema.properties) { %>
+            <TextField source="<%= prop.name %>" />
+            <% } %>
+        </Datagrid>
+    </List>
+);
+
+const <%=schemaName%>Title = ({ record }) => {
+    return record.<%=schema.idProperty%> ? <span><%=schemaName%> {record ? `"${record.<%=schema.idProperty%>}"` : ''}</span> : <span><%=schemaName%></span>;
+};
+
+export const <%=schemaName%>Edit = (props) => (
+    <Edit title={<<%=schemaName%>Title />} {...props}>
+        <SimpleForm>
+            <%_ for(let prop of schema.properties) { 
+                if( prop.name === schema.idProperty) {
+            %>
+            <DisabledInput source="<%= prop.name %>" />
+            <%_ } else { %>
+            <TextInput source="<%= prop.name %>" />
+            <%_ } 
+            } %>
+        </SimpleForm>
+    </Edit>
+);
+
+export const <%=schemaName%>Create = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <%_ for(let prop of schema.properties) { 
+            if( prop.metadata.type !== "uid") { %>
+            <TextInput source="<%= prop.name %>" />
+            <%_ } 
+            } %>
+        </SimpleForm>
+    </Create>
+);
+<% }); %>

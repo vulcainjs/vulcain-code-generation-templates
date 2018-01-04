@@ -18,10 +18,10 @@ class Context {
                 this.sendRequest(request).then(function (response) {
                     if (response.ok) {
                         var info = response.body;
-                        if (info.status === "Error") {
+                        if (info.error && info.error.message) {
                             reject(info.error.message);
                             return;
-                        }
+                        }     
                         self.schemas = info.value.schemas;
                         self.services = info.value.services;
                         self.serviceName = info.value.serviceName;

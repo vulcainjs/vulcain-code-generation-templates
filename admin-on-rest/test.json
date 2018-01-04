@@ -1,0 +1,144 @@
+{
+    "meta": {
+        "total": 0,
+        "correlationId": "ba4efc86a5bbc05c"
+    },
+    "value": {
+        "services": [
+            {
+                "schema": "Customer",
+                "kind": "action",
+                "async": false,
+                "verb": "customer.myaction",
+                "description": "Custom action",
+                "action": "myaction",
+                "scope": "?",
+                "outputSchema": "string"
+            },
+            {
+                "schema": "Customer",
+                "kind": "action",
+                "async": false,
+                "verb": "customer.create",
+                "description": "Create a new entity",
+                "action": "create",
+                "scope": "?",
+                "inputSchema": "Customer",
+                "outputSchema": "Customer"
+            },
+            {
+                "schema": "Customer",
+                "kind": "action",
+                "async": false,
+                "verb": "customer.update",
+                "description": "Update an entity",
+                "action": "update",
+                "scope": "?",
+                "inputSchema": "Customer",
+                "outputSchema": "Customer"
+            },
+            {
+                "schema": "Customer",
+                "kind": "action",
+                "async": false,
+                "verb": "customer.delete",
+                "description": "Delete an entity",
+                "action": "delete",
+                "scope": "?",
+                "inputSchema": "Customer",
+                "outputSchema": "boolean"
+            },
+            {
+                "kind": "query",
+                "verb": "_schemas",
+                "outputType": "many",
+                "description": "Get schema description",
+                "action": "_schemas",
+                "scope": "?",
+                "async": false
+            },
+            {
+                "kind": "query",
+                "verb": "_swagger",
+                "outputType": "many",
+                "description": "Display Swagger UI",
+                "action": "_swagger",
+                "scope": "?",
+                "async": false,
+                "outputSchema": "string"
+            },
+            {
+                "schema": "Customer",
+                "kind": "get",
+                "verb": "customer.get",
+                "outputType": "one",
+                "description": "Get an entity by id",
+                "action": "get",
+                "scope": "?",
+                "async": false,
+                "inputSchema": "string",
+                "outputSchema": "Customer"
+            },
+            {
+                "schema": "Customer",
+                "kind": "query",
+                "verb": "customer.all",
+                "outputType": "many",
+                "description": "Get all entities",
+                "action": "all",
+                "scope": "?",
+                "async": false,
+                "outputSchema": "Customer"
+            }
+        ],
+        "schemas": [
+            {
+                "name": "Customer",
+                "properties": [
+                    {
+                        "name": "lastName",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "firstName",
+                        "type": "string",
+                        "order": 0,
+                        "required": true,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "custom": {
+                            "label": "toto"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "type": "string",
+                        "order": 0,
+                        "typeDescription": "Must be a string",
+                        "metadata": {
+                            "type": "uid",
+                            "isKey": true
+                        }
+                    }
+                ],
+                "idProperty": "id"
+            }
+        ],
+        "domain": "vulcain",
+        "serviceName": "customer",
+        "serviceVersion": "1.0",
+        "alternateAddress": "localhost:8080",
+        "hasAsyncTasks": false,
+        "scopes": []
+    }
+}

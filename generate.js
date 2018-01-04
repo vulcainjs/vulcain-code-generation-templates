@@ -3,7 +3,7 @@ const ejs = require('ejs');
 
 // Modify this for testing
 let uri = 'http://localhost:8080';             // Service address
-let template = "microServiceProxy"; // Template name
+let template = "admin-on-rest";// "microServiceProxy"; // Template name
 
 // Generate code from template
 let templateFolder = './' + template;
@@ -23,7 +23,7 @@ try {
                     console.log("Code generation error : " + err);
                     return;
                 }
-                console.log("Code generated sucessfully in " + outputFile);
+                console.log("Code generated successfully in " + outputFile);
             });
         })
         .catch(err => {
