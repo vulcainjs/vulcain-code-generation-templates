@@ -50,6 +50,9 @@ class Context {
                 <TextField source="${prop.custom.referenceField}" />
             </ReferenceField>`;
         }
+        if(prop.type === "number")
+            return `<NumberField source="${prop.name}" />`;
+        
         return `<TextField source="${prop.name}"/>`;
     }
 
@@ -63,11 +66,13 @@ class Context {
         } 
 
         if (prop.custom && prop.custom.reference) {
-            return `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}" ${prop.required ? "" : "allowEmpty"}>
-                <TextInput source="${prop.custom.referenceField}" />
+            return `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}" ${prop.required && !editMode ? "" : "allowEmpty"}>
+                <SelectInput source="${prop.custom.referenceField}" />
             </ReferenceInput>`;
         }
-
+        if(prop.type === "number")
+            return `<NumberInput source="${prop.name}"  ${opts}/>`;
+        
         return `<TextInput source="${prop.name}"  ${opts}/>`;
     }
 
