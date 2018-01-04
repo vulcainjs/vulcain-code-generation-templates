@@ -74,9 +74,9 @@ class Context {
 
         if (prop.custom && prop.custom.reference) {
             var html = `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" 
-                    reference="${prop.custom.reference}" ${prop.required && !editMode ? "" : "allowEmpty"} `;
+                    reference="${prop.custom.reference}" ${(prop.required && !editMode) ? "" : "allowEmpty"} `;
             if (prop.custom.referenceFilter) {
-                html += `{${JSON.stringify(prop.custom.referenceFilter)}}`
+                html += `filter={${JSON.stringify(prop.custom.referenceFilter)}}`
             }
             html += `>
                 <SelectInput source="${prop.custom.referenceField}" />
@@ -84,7 +84,8 @@ class Context {
             return html;
         }
         if (prop.metadata.type === "enum") {
-            return `<SelectInput source="${prop.name}" choices={${JSON.stringify(prop.metadata.values)}} />`;            
+            let choices = prop.metadata.values.map(c => { id: c; name: c });
+            return `<SelectInput source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
         }
 
         if (prop.metadata.type === "date") {
