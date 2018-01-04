@@ -47,7 +47,7 @@ class Context {
     getFieldComponent(prop) {
         if (prop.custom && prop.custom.reference) {
             return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
-                <TextField source="${prop.custom.referenceField} />"
+                <TextField source="${prop.custom.referenceField}" />
             </ReferenceField>`;
         }
         return `<TextField source="${prop.name}"/>`;
@@ -64,7 +64,7 @@ class Context {
 
         if (prop.custom && prop.custom.reference) {
             return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
-                <TextField source="${prop.custom.referenceField} />"
+                <TextField source="${prop.custom.referenceField}" />
             </ReferenceField>`;
         }
 
