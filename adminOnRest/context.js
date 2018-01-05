@@ -46,21 +46,21 @@ class Context {
 
     getFieldComponent(prop) {
         if (prop.custom && prop.custom.reference) {
-            return `<ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
-                <TextField source="${prop.custom.referenceField}" />
-            </ReferenceField>`;
+            return `<aor.ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
+                <aor.TextField source="${prop.custom.referenceField}" />
+            </aor.ReferenceField>`;
         }
         if (prop.metadata.type === "enum") {
-            return `<ChipField source="${prop.name}" />`;            
+            return `<aor.ChipField source="${prop.name}" />`;            
         }
         if (prop.metadata.type === "date") {
-            return `<DateField source="${prop.name}" />`;            
+            return `<aor.DateField source="${prop.name}" />`;            
         }
 
         if(prop.type === "number")
-            return `<NumberField source="${prop.name}" />`;
+            return `<aor.NumberField source="${prop.name}" />`;
         
-        return `<TextField source="${prop.name}"/>`;
+        return `<aor.TextField source="${prop.name}"/>`;
     }
 
     getInputComponent(schema, prop, editMode) {
@@ -69,33 +69,33 @@ class Context {
             if (prop.metadata.type === "uid" && !editMode)
                 return "";
             
-            if(editMode) return `<DisabledInput source="${prop.name}" ${opts}/>`;
+            if(editMode) return `<aor.DisabledInput source="${prop.name}" ${opts}/>`;
         } 
 
         if (prop.custom && prop.custom.reference) {
-            var html = `<ReferenceInput label="${prop.custom.reference}" source="${prop.name}" 
+            var html = `<aor.ReferenceInput label="${prop.custom.reference}" source="${prop.name}" 
                     reference="${prop.custom.reference}" allowEmpty `;
             if (prop.custom.referenceFilter) {
                 html += `filter={${JSON.stringify(prop.custom.referenceFilter)}}`
             }
             html += `>
-                <SelectInput source="${prop.custom.referenceField}" />
-            </ReferenceInput>`;
+                <aor.SelectInput source="${prop.custom.referenceField}" />
+            </aor.ReferenceInput>`;
             return html;
         }
         if (prop.metadata.type === "enum" && prop.metadata.values) {
             let choices = prop.metadata.values.map(c => { return { id: c, name: c }; });
-            return `<${prop.metadata.values.length > 5 ? "SelectInput" : "RadioButtonGroupInput"} source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
+            return `<${prop.metadata.values.length > 5 ? "aor.SelectInput" : "aor.RadioButtonGroupInput"} source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
         }
 
         if (prop.metadata.type === "date-iso8601") {
-            return `<DateInput source="${prop.name}" />`;            
+            return `<aor.DateInput source="${prop.name}" />`;            
         }
 
         if(prop.type === "number")
-            return `<NumberInput source="${prop.name}"  ${opts}/>`;
+            return `<aor.NumberInput source="${prop.name}"  ${opts}/>`;
         
-        return `<TextInput source="${prop.name}"  ${opts}/>`;
+        return `<aor.TextInput source="${prop.name}"  ${opts}/>`;
     }
 
     sendRequest(request) {

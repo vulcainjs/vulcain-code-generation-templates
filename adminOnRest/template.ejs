@@ -1,6 +1,6 @@
 import React from 'react';
 // eslint-disable-next-line
-import { Create, Edit, SimpleForm, DisabledInput, TextInput, DateInput, LongTextInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, List, ReferenceField, ReferenceInput, SelectInput, NumberField, NumberInput, ChipField } from 'admin-on-rest';
+import * as aor from 'admin-on-rest';
 
 const required = value => value ? undefined : 'Required';
 
@@ -8,14 +8,14 @@ const required = value => value ? undefined : 'Required';
     let schema = schemas[schemaName];
 _%>
 export const <%=schemaName%>List = (props) => (
-    <List title="<%=schemaName%> list" {...props}>
-        <Datagrid>
+    <aor.List title="<%=schemaName%> list" {...props}>
+        <aor.Datagrid>
             <% for(let prop of schema.properties) { %>
             <%- getFieldComponent(prop) %>
             <% } %>
-            <EditButton/>
-        </Datagrid>
-    </List>
+            <aor.EditButton/>
+        </aor.Datagrid>
+    </aor.List>
 );
 
 const <%=schemaName%>Title = ({ record }) => {
@@ -23,22 +23,22 @@ const <%=schemaName%>Title = ({ record }) => {
 };
 
 export const <%=schemaName%>Edit = (props) => (
-    <Edit title={<<%=schemaName%>Title />} {...props}>
-        <SimpleForm>
+    <aor.Edit title={<<%=schemaName%>Title />} {...props}>
+        <aor.SimpleForm>
             <% for(let prop of schema.properties) { %>
             <%- getInputComponent(schema, prop,true) %>
             <% } %>
-        </SimpleForm>
-    </Edit>
+        </aor.SimpleForm>
+    </aor.Edit>
 );
 
 export const <%=schemaName%>Create = (props) => (
-    <Create {...props}>
-        <SimpleForm>
+    <aor.Create {...props}>
+        <aor.SimpleForm>
             <%_ for(let prop of schema.properties) { %>
             <%- getInputComponent(schema, prop) %>
             <% } %>
-        </SimpleForm>
-    </Create>
+        </aor.SimpleForm>
+    </aor.Create>
 );
 <% }); %>
