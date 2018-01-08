@@ -9,7 +9,7 @@ class Context {
     exec() {
         let uri = new URL(this.state.address);
         if (!uri.pathname || uri.pathname === '/')
-            this.state.address = new URL(this.state.address, "/api/_servicedescription");
+            this.state.address = new URL("/api/_servicedescription", this.state.address);
         
         return new Promise((resolve, reject) => {
             try {
