@@ -6,7 +6,7 @@ Property, Reference, CommandFactory } from 'vulcain-corejs';
 // 
 
 // Models
-<%_ for(let model of this.state.schemas) { -%>
+<%_ for(let model of state.schemas) { -%>
 /**
 * <%= model.description || '.' %>
 */
@@ -30,15 +30,15 @@ export class <%= model.name %> {
 
 // Command
 @Command({ executionTimeoutInMilliseconds: 1500 })
-@ServiceDependency('<%=this.state.serviceName%>', '<%=this.state.serviceVersion%>', '<%=this.state.address%>') 
-export class <%= normalizeService(this.state.serviceName) %>Command extends AbstractServiceCommand {
+@ServiceDependency('<%=state.serviceName%>', '<%=state.serviceVersion%>', '<%=state.address%>') 
+export class <%= normalizeService(state.serviceName) %>Command extends AbstractServiceCommand {
 }
 
 // Service proxy
-export class <%= normalizeService(this.state.serviceName) %>Proxy {
+export class <%= normalizeService(state.serviceName) %>Proxy {
 
-    private static serviceName = "<%=this.state.serviceName%>";
-    private static serviceVersion = "<%=this.state.serviceVersion%>";
+    private static serviceName = "<%=state.serviceName%>";
+    private static serviceVersion = "<%=state.serviceVersion%>";
     private userContext: {authorization: string, tenant: string};
 
     /**
@@ -49,7 +49,7 @@ export class <%= normalizeService(this.state.serviceName) %>Proxy {
             this.userContext = {authorization, tenant: authorizationTenant};
         }
     }
-<%_ for(let method of this.state.services) {
+<%_ for(let method of state.services) {
     if(method.verb[0] == "_")
         continue;
     let p = arguments(method);
