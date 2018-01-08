@@ -34,7 +34,7 @@ class Context {
                 let template = fs.readFileSync(Path.join(this.context.commandFolder, this.state.template, templateName), "utf8");
                 let txt = this.context.ejs.render(template, ctx);
                 
-                const outputFolder = Path.basename(ofn);
+                const outputFolder = Path.dirname(ofn);
                 this.context.shell.mkdir("-p", outputFolder);
 
                 fs.writeFile( ofn, txt, (err) => {

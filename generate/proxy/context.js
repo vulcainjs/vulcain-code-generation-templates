@@ -106,7 +106,7 @@ class Context {
                 params.push({ type: "any", name: "query", description: "Query filter" });
             return params;
         }
-        let schema = this.schemas.find(s => s.name === schemaName);
+        let schema = this.state.schemas.find(s => s.name === schemaName);
         if (!schema) { // get
             return [];
         }
@@ -118,7 +118,7 @@ class Context {
         if (!schemaName) {
             return { params: [], args: "null" };
         }
-        let schema = this.schemas.find(s => s.name === schemaName);
+        let schema = this.state.schemas.find(s => s.name === schemaName);
         if (!schema) { // get
             return { params: ["id: string"], args: "null" };
         }

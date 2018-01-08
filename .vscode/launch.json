@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/gentool/generate.js",
-            "cwd": "${workspaceFolder}/gentool"
+            "program": "${workspaceFolder}/generate.js",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

@@ -11,6 +11,7 @@ class Context {
         if (!uri.pathname || uri.pathname === '/')
             this.state.address = new URL("/api/_servicedescription", this.state.address);
         
+        let self = this;
         return new Promise((resolve, reject) => {
             try {
                 let request = this.context.rest.get(this.state.address)
@@ -24,8 +25,8 @@ class Context {
                             reject(info.error.message);
                             return;
                         }
-                        self.schemas = self.prepareSchemas(info.value.services, info.value.schemas);
-
+                        
+                        self.state.schemas = self.prepareSchemas(info.value.services, info.value.schemas);
                         resolve(self.camelCase(self.normalizeService(info.value.serviceName)) + ".js");
                     }
                     else {

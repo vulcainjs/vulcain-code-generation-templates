@@ -72,13 +72,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params [optional] args - additional url parameters
     */
     async <%=normalizeMethod(method.verb)%>Entity(data: <%= method.inputSchema %>, args?): Promise<<%=method.outputSchema||"any"%>> {
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb) + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execAction<<%=method.outputSchema||"any"%>>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext,
             '<%=method.verb%>', 
             data, 
@@ -89,13 +89,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
 <%_ } else { -%>
     async <%=normalizeMethod(method.verb)%>(<%=p.params.join('')%> args?): Promise<<%=method.outputSchema||"any"%>> {
         const $data = <%=p.args%>;
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb) + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb) + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execAction<<%=method.outputSchema||"any"%>>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
             '<%=method.verb%>', 
             $data, 
@@ -110,13 +110,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params id string - unique id
     */
     async <%=normalizeMethod(method.verb, 'get')%>(<%= p.params.join('')%>): Promise<<%=method.outputSchema||"any"%>> {
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execGet<<%=method.outputSchema||"any"%>>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
             id,
             <%=p.args%>
@@ -134,13 +134,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'getAll')%>(<%= p.params.join('')%> query?, page?: number, maxByPage?: number): Promise<<%=method.outputSchema||"any"%>[]> {
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb, 'GetAll') + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'GetAll') + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execQuery<<%=method.outputSchema||"any"%>[]>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
             '<%=method.verb%>', 
             query, 
@@ -160,13 +160,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params [optional] args - additional url parameters
     */
     async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execGet<<%=method.outputSchema||"any"%>>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
             <%=p.args%>,
             args
@@ -178,13 +178,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params {number} maxByPage - Item by page (default 100)
     */
     async <%=normalizeMethod(method.verb, 'get')%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
-        let command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(serviceName, method.verb, 'Get') + "Command" %>');
+        let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
-            command = CommandFactory.createCommand<<%=normalizeService(serviceName) + "Command" %>>(this.context, '<%=normalizeService(serviceName) + "Command" %>');
+            command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
         const response = await command.execQuery<<%=method.outputSchema||"any"%>[]>(
-            <%= normalizeService(serviceName) %>Proxy.serviceName, 
-            <%= normalizeService(serviceName) %>Proxy.serviceVersion, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
+            <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
             this.userContext, 
             '<%=method.verb%>', 
             <%=p.args%>, 

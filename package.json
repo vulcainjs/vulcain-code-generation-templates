@@ -23,6 +23,7 @@
     "ejs": "^2.5.5",
     "inquirer": "^4.0.2",
     "rx-lite": "^4.0.8",
+    "shelljs": "^0.7.8",
     "unirest": "^0.5.1"
   },
   "devDependencies": {

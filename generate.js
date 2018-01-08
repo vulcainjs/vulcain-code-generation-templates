@@ -1,18 +1,56 @@
 const fs = require('fs');
 const ejs = require('ejs');
+const Path = require('path');
+const unirest = require('unirest');
+const shell = require('shelljs');
+
+class ContextBase {
+    constructor(base) {
+        this.baseFolder = base;
+    }
+    get ejs() {
+        return ejs;
+    }
+
+    get shell() {
+        return shell;
+    }
+
+    get rest() {
+        return unirest;
+    }
+
+    get currentFolder() {
+        return this.baseFolder;
+    }
+
+    get commandFolder() {
+        return this.baseFolder;
+    }
+
+    createContextAsync(folder, state) {
+        let Context = require("./"+ Path.join(this.baseFolder, folder, 'context')).Context;                
+        let ctx = new Context();
+        ctx.state = Object.assign({}, state);
+        ctx.context = this;
+        return ctx;
+    }    
+}
 
 // Modify this for testing
 let uri = 'http://localhost:8080';             // Service address
-let template = "adminonrest";// "microServiceProxy"; // Template name
 
 // Generate code from template
-let templateFolder = './' + template;
-try {
-    let Context = require(templateFolder + '/context').Context;
-    let ctx = new Context();
-    ctx.address = uri + "/api/_servicedescription";
+let templateFolder = 'generate';
+let template = "proxy";
 
-    ctx.init({ address: ctx.address })
+let base = new ContextBase(templateFolder);
+
+try {
+    let state = { outputFolder: Path.join(shell.pwd().toString(), "generated"), address: uri + "/api/_servicedescription", template };
+    let ctx = base.createContextAsync("", state);
+
+    ctx.exec()
         .then((outputFile) => {
             let template = fs.readFileSync(templateFolder + "/template.ejs", "utf8");
             let txt = ejs.render(template, ctx);
@@ -32,4 +70,3 @@ try {
 } catch (e) {
     console.log("Code generation error : " + e);
 }
-
