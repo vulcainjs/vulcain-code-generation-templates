@@ -28,7 +28,7 @@ class Context {
     
     async generate(outputFile, ctx, templateName) {
         const ofn = Path.join(this.state.outputFolder, outputFile);
-        console.log("Generating file " + ofn + "...");
+        process.stdout.write("Generating file " + ofn + "...");
         return new Promise((resolve, reject) => {
             try {
                 let template = fs.readFileSync(Path.join(this.context.commandFolder, this.state.template, templateName), "utf8");
