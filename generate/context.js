@@ -12,7 +12,7 @@ class Context {
     }
 
     getTemplateList() {
-        return this.context.getDirectories();
+        return this.context.getDirectories(this.context.commandFolder);
     }
 
     async exec() {
