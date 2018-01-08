@@ -1,5 +1,5 @@
 const path = require('path');
-import { URL } from 'url';
+const URL = require('url');
 
 class Context {
 

@@ -1,4 +1,4 @@
-import { URL } from 'url';
+const URL = require('url');
 
 class Context {
 
