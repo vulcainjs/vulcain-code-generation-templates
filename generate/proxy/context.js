@@ -9,7 +9,7 @@ class Context {
 
     exec() {
         let uri = new URL(this.state.address);
-        if (!uri.pathname)
+        if (!uri.pathname || uri.pathname === '/')
             this.state.address = new URL(this.state.address, "/api/_servicedescription");
         
         let self = this;
