@@ -3,7 +3,7 @@ const path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080"};
+        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080/api/_servicedescription"};
     }
 
     exec() {

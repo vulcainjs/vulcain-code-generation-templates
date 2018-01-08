@@ -13,8 +13,8 @@ class Context {
         let fn = await ctx.exec();
         if (fn) {
             let list;
-            if (typeof list === "string") {
-                list = [{ outputFile: list }];
+            if (typeof fn === "string") {
+                list = [{ outputFile: fn }];
             }
             else {
                 list = fn();
