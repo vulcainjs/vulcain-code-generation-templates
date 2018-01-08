@@ -1,5 +1,4 @@
 const fs = require('fs');
-const utils = require('Utils');
 
 class Context {
 
@@ -17,7 +16,7 @@ class Context {
     }
 
     async exec() {
-        let ctx = this.context.createContext(this.state, this.state.template);
+        let ctx = this.context.createContext(this.state.template, this.state);
         let fn = await ctx.exec();
         if (fn) {
             let list;
