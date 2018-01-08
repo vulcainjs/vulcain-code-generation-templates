@@ -31,7 +31,7 @@ class Context {
         console.log("Generating file " + ofn + "...");
         return new Promise((resolve, reject) => {
             try {
-                let template = fs.readFileSync(Path.join(this.context.commandFolder, templateName), "utf8");
+                let template = fs.readFileSync(Path.join(this.context.commandFolder, this.state.template, templateName), "utf8");
                 let txt = this.context.ejs.render(template, this.ctx);
                 
                 const outputFolder = Path.basename(ofn);
