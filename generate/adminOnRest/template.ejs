@@ -4,8 +4,8 @@ import * as aor from 'admin-on-rest';
 
 const required = value => value ? undefined : 'Required';
 
-<% Object.keys(this.state.schemas).forEach( schemaName => { 
-    let schema = this.state.schemas[schemaName];
+<% Object.keys(state.schemas).forEach( schemaName => { 
+    let schema = state.schemas[schemaName];
 _%>
 export const <%=schemaName%>List = (props) => (
     <aor.List title="<%=schemaName%> list" {...props}>
