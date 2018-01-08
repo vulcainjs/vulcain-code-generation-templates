@@ -3,10 +3,14 @@ const path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080/api/_servicedescription"};
+        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080"};
     }
 
     exec() {
+        let uri = new url.URL(this.state.address);
+        if (!uri.pathname)
+            this.state.address = new URL(this.state.address, "/api/_servicedescription");
+        
         let self = this;
         return new Promise((resolve, reject) => {
 

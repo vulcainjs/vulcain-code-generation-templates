@@ -1,3 +1,6 @@
+import { URL } from 'url';
+
+const url = require('url');
 
 class Context {
 
@@ -6,6 +9,10 @@ class Context {
     }
 
     exec() {
+        let uri = new url.URL(this.state.address);
+        if (!uri.pathname)
+            this.state.address = new URL(this.state.address, "/api/_servicedescription");
+        
         return new Promise((resolve, reject) => {
             try {
                 let request = this.context.rest.get(this.state.address)
