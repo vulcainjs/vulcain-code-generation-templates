@@ -9,7 +9,7 @@ class Context {
     }
 
     async exec() {
-        let ctx = this.context.createContext(this.state.template, this.state);
+        let ctx = await this.context.createContextAsync(this.state.template, this.state);
         let fn = await ctx.exec();
         if (fn) {
             let list;
