@@ -21,7 +21,12 @@
   "homepage": "https://github.com/vulcainjs/vulcain-code-generation-templates#readme",
   "dependencies": {
     "ejs": "^2.5.5",
+    "inquirer": "^4.0.2",
+    "rx-lite": "^4.0.8",
     "unirest": "^0.5.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^8.5.7",
+    "typescript": "^2.6.2"
+  }
 }
