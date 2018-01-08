@@ -4,7 +4,7 @@ const TEST = 0;
 
 class Context {
     
-    *prompts(state) {
+    *prompts() {
         yield new Promise(resolve => resolve({
             type: 'input',
             name: 'first_name',
@@ -13,12 +13,12 @@ class Context {
         yield {
             type: 'input',
             name: 'last_name',
-            message: "What's your last name " + state.first_name,
+            message: "What's your last name " + this.state.first_name,
             default: function () {
                 return 'Doe';
             }
         };
-        if( state.last_name !== "quit")
+        if( this.state.last_name !== "quit")
         yield {
             type: 'input',
             name: 'phone',
@@ -40,7 +40,7 @@ class Context {
         yield { outputFile: "toto.js", context: options, template: "template.ejs" };
     }
 
-    init(options) {
+    exec() {
         return Promise.resolve(this.generate);
     }
 

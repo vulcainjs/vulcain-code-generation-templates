@@ -2,17 +2,9 @@ const fs = require('fs');
 
 class Context {
 
-    constructor(state) {
-        this.state = state;
-    }
-
     *prompts() {
-        let choices = this.getTemplateList();
-        yield { name: 'template', type: 'list', message: 'Select a template', choices };
-    }
-
-    getTemplateList() {
-        return this.context.getDirectories(this.context.commandFolder);
+        yield { name: 'template', type: 'list', message: 'Select a template', choices: this.this.context.getDirectories(this.context.commandFolder) };
+        yield { name: 'outputFolder', type: 'input', default: '.'}
     }
 
     async exec() {
