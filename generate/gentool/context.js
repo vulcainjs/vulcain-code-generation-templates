@@ -1,6 +1,4 @@
 const fs = require('fs');
-const rest = require('unirest');
-const TEST = 0;
 
 class Context {
     
