@@ -1,4 +1,5 @@
 const path = require('path');
+import { URL } from 'url';
 
 class Context {
 
@@ -7,7 +8,7 @@ class Context {
     }
 
     exec() {
-        let uri = new url.URL(this.state.address);
+        let uri = new URL(this.state.address);
         if (!uri.pathname)
             this.state.address = new URL(this.state.address, "/api/_servicedescription");
         
