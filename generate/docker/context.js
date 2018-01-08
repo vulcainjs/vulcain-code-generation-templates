@@ -1,21 +1,10 @@
 class Context {
-
-    prompts() {
-        return [];
+    *prompts() {
+        yield { name: 'service', type: 'input', message: 'Service name [--service]' };
+        yield { name: 'version', type: 'input', message: 'Service version [--version]', default: "1.0"};
     }
-
-    init(options) {
-        this.options = options;
-        let self = this;
-        return new Promise((resolve, reject) => {
-            if (!options.name) {
-                reject("You must provide a service name and version with --args name=xxx,version=1.0");
-            } else if (!options.version) {
-                reject("You must provide a service name and version with --args name=xxx,version=1.0");
-            } else {
-                resolve("Dockerfile");
-            }    
-        });
+    exec() {
+        return 'Dockerfile';
     }
 }
 exports.Context = Context;

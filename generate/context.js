@@ -4,8 +4,8 @@ const Path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'template', type: 'list', message: 'Select a template (--template)', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder) };
-        yield { name: 'outputFolder', type: 'input', message: "Generated output folder (--outputFolder)", default: '.'}
+        yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder) };
+        yield { name: 'outputFolder', type: 'input', message: "Generated output folder [--outputFolder]", default: '.'}
     }
 
     async exec() {
@@ -21,9 +21,7 @@ class Context {
             }
 
             for (let info of list) {
-                if (this.command.name.toLowerCase() === "generate") {
-                    await this.generate(info.outputFile, info.ctx || state, info.template || "template.ejs");
-                }
+                await this.generate(info.outputFile, info.ctx || state, info.template || "template.ejs");
             }
         }
     }

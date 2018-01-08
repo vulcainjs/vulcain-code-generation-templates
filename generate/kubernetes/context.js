@@ -1,26 +1,17 @@
 class Context {
 
-    prompts() {
-        return [];
+    *prompts() {
+        yield { name: 'service', type: 'input', message: 'Service name [--service]' };
+        yield { name: 'version', type: 'input', message: 'Service version [--version]', default: "1.0"};
     }
 
-    init(options) {
-        this.options = options;
-        options.fullName =  (options.serviceName + options.serviceVersion).replace(/[\.-]/g, '').toLowerCase();
+    exec() {
+        this.state.fullName =  (this.state.service + this.state.version).replace(/[\.-]/g, '').toLowerCase();
 
-        if (!options.image) {
-            options.image = options.fullName;
+        if (!this.state.image) {
+            this.state.image = this.state.fullName;
         }
-        let self = this;
-        return new Promise((resolve, reject) => {
-            if (!options.name) {
-                reject("You must provide a service name and version with --args name=xxx,version=1.0");
-            } else if (!options.version) {
-                reject("You must provide a service name and version with --args name=xxx,version=1.0");
-            } else {
-                resolve("service.yaml");
-            }
-        });
+        return "service.yaml";
     }
 }
 exports.Context = Context;

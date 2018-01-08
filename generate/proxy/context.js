@@ -1,21 +1,17 @@
 const path = require('path');
-const rest = require('unirest');
 
 class Context {
 
-    prompts() {
-        return [{ name: 'address', type: 'list', message: 'Select service', lookup: 'service.all' }];
+    *prompts() {
+        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080"};
     }
 
-    init(options) {
+    exec() {
         let self = this;
         return new Promise((resolve, reject) => {
-            if (!options.address) {
-                reject("You must provide a service address with --args address=xxx");
-                return;
-            }
+
             try {
-                let request = rest.get(options.address)
+                let request = this.context.rest.get(this.state.address)
                     .header('Accept', 'application/json')
                     .type("json");
 
@@ -26,13 +22,13 @@ class Context {
                             reject(info.error.message);
                             return;
                         }
-                        self.schemas = info.value.schemas;
-                        self.services = info.value.services;
-                        self.serviceName = info.value.serviceName;
-                        self.serviceVersion = info.value.serviceVersion;
-                        self.domain = info.value.domain;
+                        self.state.schemas = info.value.schemas;
+                        self.state.services = info.value.services;
+                        self.state.serviceName = info.value.serviceName;
+                        self.state.serviceVersion = info.value.serviceVersion;
+                        self.state.domain = info.value.domain;
 
-                        resolve(self.camelCase(self.normalizeService(self.serviceName + self.serviceVersion)) + ".ts");
+                        resolve(self.camelCase(self.normalizeService(self.state.serviceName + self.state.serviceVersion)) + ".ts");
                     }
                     else {
                         reject("Invalid service address : " + response.error.message);

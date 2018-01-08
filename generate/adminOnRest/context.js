@@ -1,24 +1,14 @@
-const fs = require('fs');
-const rest = require('unirest');
-const TEST = 0;
 
 class Context {
 
-    prompts() {
-        return [{ name: 'address', type: 'list', message: 'Select service', lookup: 'service.all' }];
+    *prompts() {
+        yield { name: 'address', type: 'input', message: 'Select service [--address]', default: "http://localhost:8080"};
     }
 
-    init(options) {
-        let self = this;
-        if (TEST) {
-            var info = JSON.parse(fs.readFileSync("admin-on-rest/test.json"));
-            self.schemas = self.prepareSchemas(info.value.services, info.value.schemas);
-            return Promise.resolve();
-        }    
-
+    exec() {
         return new Promise((resolve, reject) => {
             try {
-                let request = rest.get(options.address)
+                let request = rest.get(this.state.address)
                     .header('Accept', 'application/json')
                     .type("json");
 
