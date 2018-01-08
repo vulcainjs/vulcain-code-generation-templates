@@ -21,7 +21,7 @@ class Context {
             }
 
             for (let info of list) {
-                await this.generate(info.outputFile, info.ctx || ctx.state, info.template || "template.ejs");
+                await this.generate(info.outputFile, info.ctx || ctx, info.template || "template.ejs");
             }
         }
     }
