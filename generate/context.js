@@ -32,7 +32,7 @@ class Context {
         return new Promise((resolve, reject) => {
             try {
                 let template = fs.readFileSync(Path.join(this.context.commandFolder, this.state.template, templateName), "utf8");
-                let txt = this.context.ejs.render(template, this.ctx);
+                let txt = this.context.ejs.render(template, ctx);
                 
                 const outputFolder = Path.basename(ofn);
                 this.context.shell.mkdir("-p", outputFolder);
