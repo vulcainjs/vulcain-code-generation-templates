@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Path = require('path');
+const shell = require('shelljs');
 
 class Context {
 
@@ -29,16 +30,16 @@ class Context {
     }
     
     async generate(outputFile, ctx, templateName) {
-        const ofn = Path.join(this.outputFolder, outputFile);
+        const ofn = Path.join(this.state.outputFolder, outputFile);
         console.log("Generating file " + ofn + "...");
         return new Promise((resolve, reject) => {
             try {
                 let template = fs.readFileSync(templateName, "utf8");
                 let txt = ejs.render(template, this.ctx);
                 
-                // TODO create folder
                 const outputFolder = Path.basename(ofn);
-
+                shell.mkdir("-p", outputFolder);
+                
                 fs.writeFile( ofn, txt, (err) => {
                     if (err) {
                         console.log("Failed : " + err);
