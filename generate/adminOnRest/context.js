@@ -8,7 +8,7 @@ class Context {
     exec() {
         return new Promise((resolve, reject) => {
             try {
-                let request = rest.get(this.state.address)
+                let request = this.context.rest.get(this.state.address)
                     .header('Accept', 'application/json')
                     .type("json");
 
