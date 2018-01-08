@@ -1,6 +1,5 @@
 const fs = require('fs');
 const Path = require('path');
-const shell = require('shelljs');
 
 class Context {
 
@@ -35,11 +34,11 @@ class Context {
         return new Promise((resolve, reject) => {
             try {
                 let template = fs.readFileSync(templateName, "utf8");
-                let txt = ejs.render(template, this.ctx);
+                let txt = this.context.ejs.render(template, this.ctx);
                 
                 const outputFolder = Path.basename(ofn);
-                shell.mkdir("-p", outputFolder);
-                
+                this.context.shell.mkdir("-p", outputFolder);
+
                 fs.writeFile( ofn, txt, (err) => {
                     if (err) {
                         console.log("Failed : " + err);
