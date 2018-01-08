@@ -5,7 +5,7 @@ class Context {
 
     *prompts() {
         yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder) };
-        yield { name: 'outputFolder', type: 'input', message: "Generated output folder [--outputFolder]", default: '.'}
+        yield { name: 'outputFolder', type: 'input', message: "Generated output folder [--outputFolder]", default: this.context.currentFolder}
     }
 
     async exec() {
@@ -31,7 +31,7 @@ class Context {
         console.log("Generating file " + ofn + "...");
         return new Promise((resolve, reject) => {
             try {
-                let template = fs.readFileSync(templateName, "utf8");
+                let template = fs.readFileSync(Path.join(this.context.commandFolder, templateName), "utf8");
                 let txt = this.context.ejs.render(template, this.ctx);
                 
                 const outputFolder = Path.basename(ofn);
