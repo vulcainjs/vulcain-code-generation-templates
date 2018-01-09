@@ -10,7 +10,10 @@ let commandName = 'generate';
 // Initialize initial state
 let uri = 'http://localhost:8080';
 let template = "proxy";
-let state = { outputFolder: Path.join(shell.pwd().toString(), "generated"), address: uri + "/api/_servicedescription", template };
+let state = {
+    outputFolder: Path.join(shell.pwd().toString(), "generated"), address: uri + "/api/_servicedescription",
+    template: "aor/adminOnRest"
+};
 
 class ContextBase {
     constructor(base) {
