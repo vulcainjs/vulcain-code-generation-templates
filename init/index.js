@@ -120,7 +120,7 @@ class Context {
             let txt = fs.readFileSync(file, "utf8");
 
             let ctx = {
-                fileName = file,
+                fileName: file,
                 state
             };
 
