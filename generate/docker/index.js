@@ -7,4 +7,4 @@ class Context {
         return 'Dockerfile';
     }
 }
-exports = Context;
+exports.default = Context;

@@ -148,4 +148,4 @@ class Context {
     }
 }
 
-exports = Context;
+exports.default = Context;

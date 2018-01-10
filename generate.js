@@ -46,7 +46,7 @@ class ContextBase {
 
     createContextAsync(folder, state) {
         let Context = require("./" + Path.join(this.baseFolder, folder, 'index'));                
-        let ctx = new Context();
+        let ctx = new Context.default();
         ctx.state = Object.assign({}, state);
         ctx.context = this;
         return ctx;
