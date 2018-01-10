@@ -4,9 +4,9 @@ const path = require('path');
 class Context {
 
     *prompts() {
-        // yield { name: 'project', type: 'input', message: "Project name" }
-        // yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
-        // yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
+        yield { name: 'project', type: 'input', message: "Project name" }
+        yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
+        yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
 
         this.outputFolder = path.join(this.state.outputFolder, this.state.project);
         this.sourceFolder = path.join(this.context.commandFolder, this.state.template);
