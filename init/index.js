@@ -33,7 +33,8 @@ class Context {
             console.log(this.context.chalk.yellow("Warning: Error when updating source files - ") + e);
         }
         this.execScriptsAsync();
-        this.context.shell.rm("", path.join(this.outputFolder, "$template.js"), {silent:true})
+        this.context.shell.rm(path.join(this.outputFolder, "$template.js"), {silent:true})
+        console.log(this.context.chalk.green("Project initialized in "+ this.outputFolder));
         return Promise.resolve();
     }
 
