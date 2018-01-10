@@ -5,7 +5,7 @@ class Context {
 
     *prompts() {
         yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
-        yield { name: 'project', type: 'input', message: "Project name", validate: (s) => typeof s === "string" };
+        yield { name: 'project', type: 'input', message: "Project name", validate: (s) => !!s };
         yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
 
         this.outputFolder = path.join(this.state.outputFolder, this.state.project);
