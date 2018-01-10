@@ -4,8 +4,8 @@ const path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'project', type: 'input', message: "Project name" }
         yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
+        yield { name: 'project', type: 'input', message: "Project name" }
         yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
 
         this.outputFolder = path.join(this.state.outputFolder, this.state.project);
@@ -31,7 +31,7 @@ class Context {
         catch (e) {
             console.log(this.context.chalk.yellow("Warning: Error when updating source files - ") + e);
         }
-        templateEngine.execScriptsAsync();
+        this.execScriptsAsync();
         this.context.shell.rm("", path.join(this.outputFolder, "$template.js"), {silent:true})
         return Promise.resolve();
     }
@@ -52,12 +52,12 @@ class Context {
     transform(outputFolder) {
         // find manifest
         if (this.manifest && this.manifest.replace) {
-            for(let rule of this.manifest.replace) {
+            for(let rule of this.manifest.replace()) {
                 this.replace(outputFolder, rule.filter, rule.context);
             }
         }
         if (this.manifest && this.manifest.rename) {
-            for(let item of this.manifest.rename) {
+            for(let item of this.manifest.rename()) {
                 this.rename(outputFolder, item.filter, new RegExp(item.pattern, "gi"), item.target);
             }
         }
