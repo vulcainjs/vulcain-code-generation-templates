@@ -24,7 +24,7 @@ class Context {
     exec() {
         this.context.shell.mkdir("-p", this.outputFolder);
 
-        this.context.shell.cp("-R", this.sourceFolder + path.sep + "*", this.outputFolder);   
+        this.context.shell.cp("-R", this.sourceFolder + path.sep + ".*", this.sourceFolder + path.sep + "*", this.outputFolder);   
 
         try {
             this.transform(this.outputFolder );
@@ -32,9 +32,12 @@ class Context {
         catch (e) {
             console.log(this.context.chalk.yellow("Warning: Error when updating source files - ") + e);
         }
+
         this.execScriptsAsync();
+        
         this.context.shell.rm(path.join(this.outputFolder, "$template.js"))
         console.log(this.context.chalk.green("Project initialized in "+ this.outputFolder));
+        
         return Promise.resolve();
     }
 
@@ -64,18 +67,6 @@ class Context {
             }
         }
     }
-
-    // displayMessage(step: string) {
-    //     let manifest = this.readManifest();
-    //     if (manifest && manifest.messages) {
-    //         let messages: Array<string> = manifest.messages[step];
-    //         if (messages) {
-    //             console.log("");
-    //             messages.forEach((msg: string) => console.log("INFO : " + msg));
-    //             console.log("");
-    //         }
-    //     }
-    // }
 
     execScriptsAsync() {
         if (this.manifest && this.manifest.scripts) {
