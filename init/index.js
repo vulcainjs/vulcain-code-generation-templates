@@ -4,12 +4,13 @@ const path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'project', type: 'input', message: "Project name" }
-        yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
-        yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
+        // yield { name: 'project', type: 'input', message: "Project name" }
+        // yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
+        // yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
 
+        this.outputFolder = path.join(this.state.outputFolder, this.state.project);
         this.sourceFolder = path.join(this.context.commandFolder, this.state.template);
-        let manifestPath = path.join(outputFolder, "template.json");
+        let manifestPath = path.join(this.sourceFolder, "$template.js");
         this.manifest = this.getManifest(manifestPath);
         let prompts = this.manifest && this.manifest.prompts && this.manifest.prompts(this.state);
         if (prompts) {
@@ -20,25 +21,25 @@ class Context {
     }
 
     exec() {
-        const outputFolder = path.join(this.state.outputFolder, this.state.project);
-        this.context.shell.mkdir("-p", outputFolder);
+        this.context.shell.mkdir("-p", this.outputFolder);
 
-        this.context.shell.cp("-R", this.sourceFolder + path.sep + "*", outputFolder);   
+        this.context.shell.cp("-R", this.sourceFolder + path.sep + "*", this.outputFolder);   
 
         try {
-            this.transform(outputFolder );
+            this.transform(this.outputFolder );
         }
         catch (e) {
             console.log(this.context.chalk.yellow("Warning: Error when updating source files - ") + e);
         }
         templateEngine.execScriptsAsync();
+        this.context.shell.rm("", path.join(this.outputFolder, "$template.js"), {silent:true})
         return Promise.resolve();
     }
 
     getManifest(manifestPath) {
         if (fs.existsSync(manifestPath)) {
             try {
-                let m = require(Path.join(this._executionContext.commandFolder, folder, '$template.js'));
+                let m = require(manifestPath);
                 return new m.default();
             }
             catch (e) {
@@ -51,14 +52,14 @@ class Context {
     transform(outputFolder) {
         // find manifest
         if (this.manifest && this.manifest.replace) {
-            this.manifest.replace.forEach(rule => {
+            for(let rule of this.manifest.replace) {
                 this.replace(outputFolder, rule.filter, rule.context);
-            });
+            }
         }
         if (this.manifest && this.manifest.rename) {
-            this.manifest.rename.forEach(item => {
+            for(let item of this.manifest.rename) {
                 this.rename(outputFolder, item.filter, new RegExp(item.pattern, "gi"), item.target);
-            });
+            }
         }
     }
 

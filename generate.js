@@ -22,7 +22,8 @@ let state = {
 
 class ContextBase {
     constructor(base) {
-        this.baseFolder = base;
+        this._currentFolder = shell.pwd().toString();
+        this._baseFolder = Path.join(shell.pwd().toString(), base);
     }
     get ejs() {
         return ejs;
@@ -41,15 +42,15 @@ class ContextBase {
     }
 
     get currentFolder() {
-        return this.baseFolder;
+        return this._currentFolder;
     }
 
     get commandFolder() {
-        return this.baseFolder;
+        return this._baseFolder;
     }
 
     createContextAsync(folder, state) {
-        let Context = require("./" + Path.join(this.baseFolder, folder, 'index'));                
+        let Context = require( Path.join(this._baseFolder, folder, 'index'));                
         let ctx = new Context.default();
         ctx.state = Object.assign({}, state);        
         ctx.context = this;
