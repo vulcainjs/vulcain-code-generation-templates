@@ -1,8 +1,8 @@
-import { EventHandler, Consume, AbstractEventHandler, EventData, System } from "vulcain-corejs";
+import { EventHandler, Consume, AbstractEventHandler, EventData, Service } from "vulcain-corejs";
 import { Customer } from "../models/models";
 import { MyCommand } from "../commands/mycommand";
 
-@EventHandler({ schema: "Customer", subscribeToDomain: System.domainName })
+@EventHandler({ schema: "Customer", subscribeToDomain: Service.domainName })
 export class CustomerEventHandler extends AbstractEventHandler {
 
     // Event handler on domain customer, schema customer and action create

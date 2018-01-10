@@ -1,4 +1,4 @@
-import { System, IDynamicProperty, DynamicConfiguration, Command, HttpDependency, AbstractHttpCommand, Inject, IContainer, DefaultServiceNames, ConfigurationProperty } from "vulcain-corejs";
+import { Service, IDynamicProperty, DynamicConfiguration, Command, HttpDependency, AbstractHttpCommand, Inject, IContainer, DefaultServiceNames, ConfigurationProperty } from "vulcain-corejs";
 
 @Command({ executionTimeoutInMilliseconds: 1500 })
 @HttpDependency("http://jsonplaceholder.typicode.com/posts/1")

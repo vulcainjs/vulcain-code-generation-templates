@@ -1,4 +1,4 @@
-import { Application, System } from "vulcain-corejs";
+import { Application, Service } from "vulcain-corejs";
 
 // The domain is mandatory
 const domain = "<%=state.domain %>";
