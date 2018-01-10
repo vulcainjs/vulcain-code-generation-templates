@@ -45,7 +45,7 @@ class ContextBase {
     }
 
     createContextAsync(folder, state) {
-        let Context = require("./" + Path.join(this.baseFolder, folder, 'index')).Context;                
+        let Context = require("./" + Path.join(this.baseFolder, folder, 'index'));                
         let ctx = new Context();
         ctx.state = Object.assign({}, state);
         ctx.context = this;

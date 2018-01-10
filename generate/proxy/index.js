@@ -148,4 +148,4 @@ class Context {
     }
 }
 
-exports.Context = Context;
+exports = Context;

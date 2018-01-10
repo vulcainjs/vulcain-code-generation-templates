@@ -129,3 +129,5 @@ class Context {
         }
     }
 }
+
+exports = Context;

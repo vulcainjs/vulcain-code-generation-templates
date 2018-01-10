@@ -14,4 +14,4 @@ class Context {
         return "service.yaml";
     }
 }
-exports.Context = Context;
+exports = Context;
