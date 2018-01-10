@@ -5,15 +5,20 @@ const unirest = require('unirest');
 const shell = require('shelljs');
 
 // Command to test
-let commandName = 'generate';
+let commandName = "generate";
 
-// Initialize initial state
-let uri = 'http://localhost:8080';
+// Specific state
+// let state = {
+//     outputFolder: Path.join(shell.pwd().toString(), "generated"),
+//     address: 'http://localhost:8080',
+//     template: "adminOnRest"
+// };
 let state = {
     outputFolder: Path.join(shell.pwd().toString(), "generated"),
-    address: uri,
-    template: "adminOnRest"
-};
+    template: "kubernetes",
+    service: "service-1",
+    version: "1.0"
+}
 
 class ContextBase {
     constructor(base) {
@@ -40,7 +45,7 @@ class ContextBase {
     }
 
     createContextAsync(folder, state) {
-        let Context = require("./"+ Path.join(this.baseFolder, folder, 'context')).Context;                
+        let Context = require("./" + Path.join(this.baseFolder, folder, 'index')).Context;                
         let ctx = new Context();
         ctx.state = Object.assign({}, state);
         ctx.context = this;

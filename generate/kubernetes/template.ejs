@@ -2,15 +2,15 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    serviceName: <%= this.state.service %>
-    serviceVersion: "<%= this.state.version %>"
-  name: <%= this.state.fullServiceName %>
+    serviceName: <%= state.service %>
+    serviceVersion: "<%= state.version %>"
+  name: <%= state.fullServiceName %>
 spec:
   replicas: 1
   selector:
     matchLabels:
-      serviceName: <%= this.state.service %>
-      serviceVersion: "<%= this.state.version %>"
+      serviceName: <%= state.service %>
+      serviceVersion: "<%= state.version %>"
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -19,12 +19,12 @@ spec:
   template:
     metadata:
       labels:
-        serviceName: <%= this.state.service %>
-        serviceVersion: "<%= this.state.version %>"
+        serviceName: <%= state.service %>
+        serviceVersion: "<%= state.version %>"
     spec:
       containers:
-        - image: <%= this.state.image %>
-          name: <%= this.state.service %>
+        - image: <%= state.image %>
+          name: <%= state.service %>
           livenessProbe:
             httpGet:
               path: /health
@@ -37,18 +37,16 @@ spec:
             - containerPort: 8080
               name: http
               protocol: TCP
-
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: <%= this.state.fullServiceName %>
+  name: <%= state.fullServiceName %>
 spec:
   ports:
-    # Accept traffic sent to port 80
     - name: http
       port: 8080
   selector:
-      serviceName: <%= this.state.service %>
-      serviceVersion: "<%= this.state.version %>"
+      serviceName: <%= state.service %>
+      serviceVersion: "<%= state.version %>"
   type: NodePort

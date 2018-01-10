@@ -7,8 +7,8 @@ ARG Source
 EXPOSE 8080
 
 # Replace with the service name
-ENV VULCAIN_SERVICE_NAME=<%= this.state.service %>
-ENV VULCAIN_SERVICE_VERSION=<%= this.state.version %>
+ENV VULCAIN_SERVICE_NAME=<%= state.service %>
+ENV VULCAIN_SERVICE_VERSION=<%= state.version %>
 
 HEALTHCHECK --interval=10s --timeout=1s CMD curl -f http://localhost:8080/health || exit 1
 
