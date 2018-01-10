@@ -53,7 +53,7 @@ class Context {
         // find manifest
         if (this.manifest && this.manifest.replace) {
             for(let rule of this.manifest.replace()) {
-                this.replace(outputFolder, rule.filter, rule.context);
+                this.replace(outputFolder, rule.filter);
             }
         }
         if (this.manifest && this.manifest.rename) {
@@ -123,7 +123,7 @@ class Context {
         }
     }
 
-    replace(outputFolder, filter, state) {
+    replace(outputFolder, filter) {
         let files = this.context.glob.sync(filter, { cwd: outputFolder });
         for (let n in files) {
             let file = path.join(outputFolder, files[n]);
@@ -131,10 +131,10 @@ class Context {
 
             let ctx = {
                 fileName: file,
-                state
+                state: this.state
             };
 
-            let txt2 = this.context.ejs.render(txt, state);
+            let txt2 = this.context.ejs.render(txt, ctx);
             fs.writeFileSync(file, txt2);
         }
     }
