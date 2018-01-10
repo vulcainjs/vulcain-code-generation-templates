@@ -1,14 +1,18 @@
 # Templates for vulcain code generation
 
-usage in the root project directory.
+Templates for [Vulcain](https://github.com/vulcainjs).
 
+You must install [Apotek](https://github.com/malain/apotek) to use this templates.
 
 ```js
-vulcain create --template microServiceProxy --uri <service address>
+npm install -g apotek
 ```
 
-| template | Description |
-|----------|-------------|
-| microServiceProxy | Node proxy class for calling another vulcain microservice |
-| angularServiceProxy | Angular service for calling vulcain microservice |
+This is the default templates repository for **Apotek**.
+
+## Usage
+
+```js
+apotek generate --template proxy --address <vulcain service address>
+```
 
