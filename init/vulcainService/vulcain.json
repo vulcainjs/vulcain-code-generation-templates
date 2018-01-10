@@ -1,0 +1,12 @@
+{
+   "stage": "local",
+   "alias": {
+   },
+   "stubs": {
+    "services": {},
+    "http": {}
+   },
+   "config": {
+
+   }
+}

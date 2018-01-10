@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "node",
+            "request": "launch",
+            "smartStep": true,
+            "program": "${workspaceRoot}/src/index.ts",
+            "preLaunchTask": "build",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "VULCAIN_ENV": "<%= env %>",
+                "VULCAIN_SERVICE_NAME": "<%= project.fullName %>",
+                "VULCAIN_SERVICE_VERSION": "1.0"
+            },
+            "sourceMaps": true,
+            "internalConsoleOptions": "openOnSessionStart",
+            "outFiles": [
+                "${workspaceRoot}/lib/src/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "smartStep": true,
+            "name": "Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/lib/test"
+            ],
+            "env": {
+                "VULCAIN_ENV": "<%= env %>",
+                "VULCAIN_SERVICE_NAME": "<%= project.fullName %>",
+                "VULCAIN_SERVICE_VERSION": "1.0"
+            },
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
