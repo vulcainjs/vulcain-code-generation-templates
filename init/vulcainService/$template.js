@@ -1,7 +1,7 @@
 class Manifest {
   *prompts(state) {
     yield { name: 'service', type: 'input', message: "Service name", default: state.project }
-    yield { name: 'domain', type: "input", message: "Domain name"}
+    yield { name: 'domain', type: "input", message: "Domain name", validate: (s) => typeof s === "string"}
   }
 
   *replace() {

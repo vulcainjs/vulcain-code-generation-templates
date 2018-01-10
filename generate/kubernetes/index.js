@@ -1,7 +1,7 @@
 class Context {
 
     *prompts() {
-        yield { name: 'service', type: 'input', message: 'Service name [--service]' };
+        yield { name: 'service', type: 'input', message: 'Service name [--service]', validate: (s) => typeof s === "string" };
         yield { name: 'version', type: 'input', message: 'Service version [--version]', default: "1.0"};
     }
 
