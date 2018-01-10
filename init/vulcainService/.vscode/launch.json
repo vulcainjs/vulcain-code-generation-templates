@@ -11,8 +11,8 @@
             "args": [],
             "cwd": "${workspaceRoot}",
             "env": {
-                "VULCAIN_ENV": "<%= env %>",
-                "VULCAIN_SERVICE_NAME": "<%= project.fullName %>",
+                "VULCAIN_ENV": "test",
+                "VULCAIN_SERVICE_NAME": "<%= state.service %>",
                 "VULCAIN_SERVICE_VERSION": "1.0"
             },
             "sourceMaps": true,
@@ -36,8 +36,8 @@
                 "${workspaceFolder}/lib/test"
             ],
             "env": {
-                "VULCAIN_ENV": "<%= env %>",
-                "VULCAIN_SERVICE_NAME": "<%= project.fullName %>",
+                "VULCAIN_ENV": "test",
+                "VULCAIN_SERVICE_NAME": "<%= state.service %>",
                 "VULCAIN_SERVICE_VERSION": "1.0"
             },
             "internalConsoleOptions": "openOnSessionStart"

@@ -1,7 +1,7 @@
 import { Application, System } from "vulcain-corejs";
 
 // The domain is mandatory
-const domain = "<%=project.namespace %>";
+const domain = "<%=state.domain %>";
 
 // Default configuration
 let port = 8080;

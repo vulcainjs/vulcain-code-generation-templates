@@ -3,9 +3,10 @@ const ejs = require('ejs');
 const Path = require('path');
 const unirest = require('unirest');
 const shell = require('shelljs');
+const glob = require('glob');
 
 // Command to test
-let commandName = "generate";
+let commandName = "init";
 
 // Specific state
 // let state = {
@@ -15,9 +16,8 @@ let commandName = "generate";
 // };
 let state = {
     outputFolder: Path.join(shell.pwd().toString(), "generated"),
-    template: "kubernetes",
-    service: "service-1",
-    version: "1.0"
+    template: "vulcainService",
+    project: "test"
 }
 
 class ContextBase {
@@ -26,6 +26,10 @@ class ContextBase {
     }
     get ejs() {
         return ejs;
+    }
+
+    get glob() {
+        return glob;
     }
 
     get shell() {
@@ -47,8 +51,10 @@ class ContextBase {
     createContextAsync(folder, state) {
         let Context = require("./" + Path.join(this.baseFolder, folder, 'index'));                
         let ctx = new Context.default();
-        ctx.state = Object.assign({}, state);
+        ctx.state = Object.assign({}, state);        
         ctx.context = this;
+        // Force prompts call
+        ctx.prompts && Array.from(ctx.prompts(ctx.state));
         return ctx;
     }    
 }

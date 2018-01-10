@@ -1,36 +1,45 @@
 const fs = require('fs');
-const Path = require('path');
+const path = require('path');
 
 class Context {
 
     *prompts() {
-        yield { name: 'projectName', type: 'input', message: "Project name" }
+        yield { name: 'project', type: 'input', message: "Project name" }
         yield { name: 'template', type: 'list', message: 'Select a template [--template]', validate: (v) => typeof v === "string" || "Template name is required", choices: this.context.getDirectories(this.context.commandFolder, 2) };
-        yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder }
+        yield { name: 'outputFolder', type: 'input', message: "Generated output folder (without project name) [--outputFolder]", default: this.context.currentFolder };
+
+        this.sourceFolder = path.join(this.context.commandFolder, this.state.template);
+        let manifestPath = path.join(outputFolder, "template.json");
+        this.manifest = this.getManifest(manifestPath);
+        let prompts = this.manifest && this.manifest.prompts && this.manifest.prompts(this.state);
+        if (prompts) {
+            for (let p of prompts) {
+                yield p;
+            }
+        }
     }
 
     exec() {
-        const outputFolder = Path.join(this.state.outputFolder, this.state.name);
+        const outputFolder = path.join(this.state.outputFolder, this.state.project);
         this.context.shell.mkdir("-p", outputFolder);
 
-        const sourceFolder = Path.join(this.context.commandFolder, this.state.template);
-        this.context.shell.cp("-R", sourceFolder, outputFolder);   
+        this.context.shell.cp("-R", this.sourceFolder + path.sep + "*", outputFolder);   
 
-        let manifestPath = Path.join(outputFolder, "template.json");
-        const manifest = this.readManifest(manifestPath);
         try {
-            this.transform(outputFolder, manifest);
+            this.transform(outputFolder );
         }
         catch (e) {
             console.log(this.context.chalk.yellow("Warning: Error when updating source files - ") + e);
         }
-        templateEngine.execScriptsAsync(manifest);
+        templateEngine.execScriptsAsync();
+        return Promise.resolve();
     }
 
-    readManifest(manifestPath) {
+    getManifest(manifestPath) {
         if (fs.existsSync(manifestPath)) {
             try {
-                return JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+                let m = require(Path.join(this._executionContext.commandFolder, folder, '$template.js'));
+                return new m.default();
             }
             catch (e) {
                 console.log(this.context.chalk.red("Error when reading template manifest"));
@@ -39,15 +48,15 @@ class Context {
         }
     }
 
-    transform(outputFolder, manifest) {
+    transform(outputFolder) {
         // find manifest
-        if (manifest && manifest.transform && manifest.transform.replace) {
-            manifest.transform.replace.forEach(rule => {
+        if (this.manifest && this.manifest.replace) {
+            this.manifest.replace.forEach(rule => {
                 this.replace(outputFolder, rule.filter, rule.context);
             });
         }
-        if (manifest && manifest.transform && manifest.transform.rename) {
-            manifest.transform.rename.forEach(item => {
+        if (this.manifest && this.manifest.rename) {
+            this.manifest.rename.forEach(item => {
                 this.rename(outputFolder, item.filter, new RegExp(item.pattern, "gi"), item.target);
             });
         }
@@ -65,10 +74,10 @@ class Context {
     //     }
     // }
 
-    execScriptsAsync(manifest) {
-        if (manifest && manifest.scripts) {
+    execScriptsAsync() {
+        if (this.manifest && this.manifest.scripts) {
             let platform = os.platform() === "win32" ? "win32" : "*nix";
-            let commands = manifest.scripts[platform] || manifest.scripts;
+            let commands = this.manifest.scripts[platform] || this.manifest.scripts.all;
             if (commands) {
                 for (let cmd of commands) {
                     if (typeof cmd === "string") {

@@ -21,6 +21,7 @@
   "homepage": "https://github.com/vulcainjs/vulcain-code-generation-templates#readme",
   "dependencies": {
     "ejs": "^2.5.5",
+    "glob": "^7.1.2",
     "inquirer": "^4.0.2",
     "rx-lite": "^4.0.8",
     "shelljs": "^0.7.8",

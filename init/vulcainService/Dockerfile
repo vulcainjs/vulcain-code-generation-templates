@@ -19,7 +19,7 @@ FROM node:8-alpine
 
 EXPOSE 8080
 
-ENV VULCAIN_SERVICE_NAME=<%= project.fullName %>
+ENV VULCAIN_SERVICE_NAME=<%= state.service %>
 ENV VULCAIN_SERVICE_VERSION=1.0
 
 HEALTHCHECK --interval=30s --timeout=1s CMD curl -f http://localhost:8080/health || exit 1

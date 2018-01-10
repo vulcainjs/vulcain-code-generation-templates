@@ -1,5 +1,5 @@
 {
-  "name": "<%= project.fullName %>",
+  "name": "<%= state.service %>",
   "version": "1.0.0",
   "description": "Vulcain micro-service",
   "main": "src/index.ts",
