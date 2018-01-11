@@ -11,7 +11,7 @@ class Context {
 
         this.outputFolder = path.join(this.state.outputFolder, this.state.project);
         this.sourceFolder = path.join(this.context.commandFolder, this.state.template);
-        let manifestPath = path.join(this.sourceFolder, "$template.js");
+        let manifestPath = path.join(this.sourceFolder, this.context.entryPoint);
         this.manifest = this.getManifest(manifestPath);
         let prompts = this.manifest && this.manifest.prompts && this.manifest.prompts(this.state);
         if (prompts) {
@@ -24,7 +24,7 @@ class Context {
     exec() {
         this.context.shell.mkdir("-p", this.outputFolder);
 
-        this.context.shell.cp("-R", this.sourceFolder + path.sep + ".*", this.sourceFolder + path.sep + "*", this.outputFolder);   
+        this.context.shell.cp("-R", this.sourceFolder + "/template/.*", this.sourceFolder + "/template/*", this.outputFolder);   
 
         try {
             this.transform(this.outputFolder );
@@ -35,7 +35,6 @@ class Context {
 
         this.execScriptsAsync();
         
-        this.context.shell.rm(path.join(this.outputFolder, "$template.js"))
         console.log(this.context.chalk.green("Project initialized in "+ this.outputFolder));
         
         return Promise.resolve();
