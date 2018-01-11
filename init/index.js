@@ -22,6 +22,9 @@ class Context {
     }
 
     exec() {
+        if (fs.existsSync(this.outputFolder)) {
+            throw new Error('Initialization aborted. Output folder already exists.');            
+        }
         this.context.shell.mkdir("-p", this.outputFolder);
 
         this.context.shell.cp("-R", this.sourceFolder + "/template/.*", this.sourceFolder + "/template/*", this.outputFolder);   
@@ -69,6 +72,7 @@ class Context {
 
     execScriptsAsync() {
         if (this.manifest && this.manifest.scripts) {
+            this.context.shell.cd(this.outputFolder);
             let platform = os.platform() === "win32" ? "win32" : "*nix";
             let scripts = this.manifest.scripts();
             let commands = scripts[platform] || scripts.all;
