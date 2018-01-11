@@ -4,7 +4,7 @@ const Path = require('path');
 class Context {
 
     *prompts() {
-        yield { name: 'template', type: 'list', message: 'Select a template [--template]', choices: this.context.getDirectories(this.context.commandFolder, 2) };
+        yield { name: 'template', type: 'list', message: 'Select a template [--template]', choices: this.context.getTemplates(this.context.commandFolder) };
         yield { name: 'outputFolder', type: 'input', message: "Generated output folder [--outputFolder]", default: this.context.currentFolder}
     }
 
