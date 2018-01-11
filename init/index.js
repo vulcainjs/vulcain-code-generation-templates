@@ -70,7 +70,8 @@ class Context {
     execScriptsAsync() {
         if (this.manifest && this.manifest.scripts) {
             let platform = os.platform() === "win32" ? "win32" : "*nix";
-            let commands = this.manifest.scripts[platform] || this.manifest.scripts.all;
+            let scripts = this.manifest.scripts();
+            let commands = scripts[platform] || scripts.all;
             if (commands) {
                 for (let cmd of commands) {
                     if (typeof cmd === "string") {
