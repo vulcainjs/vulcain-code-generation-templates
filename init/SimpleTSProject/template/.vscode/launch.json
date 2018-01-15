@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "node",
+            "request": "launch",
+            "smartStep": true,
+            "program": "${workspaceRoot}/src/index.ts",
+            "preLaunchTask": "build",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "env": {
+            },
+            "sourceMaps": true,
+            "internalConsoleOptions": "openOnSessionStart",
+            "outFiles": [
+                "${workspaceRoot}/lib/src/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "smartStep": true,
+            "name": "Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/lib/test"
+            ],
+            "env": {
+            },
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
