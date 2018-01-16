@@ -68,10 +68,12 @@ class Context {
         if (prop.custom && prop.custom.ignore)
             return "";
         
-        var opts = prop.required ? " validate={[required ]} " : "";
+        var opts = prop.required ? " validate={[required ]}" : "";
         if(opts.description)
-            opts.label += prop.description;   
-        opts.defaultValue = prop.defaultValue;
+            opts.label += " " + prop.description;   
+        if(opts.defaultValue)
+            opts.defaultValue += " " + prop.defaultValue;
+        
         if (prop.name === schema.idProperty) {        
             if (prop.metadata.type === "uid" && !editMode)
                 return "";
