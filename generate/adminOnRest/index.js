@@ -41,6 +41,9 @@ class Context {
     }
 
     getFieldComponent(prop) {
+        if (prop.custom.ignore)
+            return "";
+        
         if (prop.custom && prop.custom.reference) {
             return `<aor.ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
                 <aor.TextField source="${prop.custom.referenceField}" />
@@ -52,7 +55,9 @@ class Context {
         if (prop.metadata.type === "date") {
             return `<aor.DateField source="${prop.name}" />`;            
         }
-
+        if(prop.type === "boolean")
+            return `<aor.BooleanField source="${prop.name}" />`;
+        
         if(prop.type === "number")
             return `<aor.NumberField source="${prop.name}" />`;
         
@@ -60,7 +65,12 @@ class Context {
     }
 
     getInputComponent(schema, prop, editMode) {
+        if (prop.custom.ignore)
+            return "";
+        
         var opts = prop.required ? " validate={[required ]}" : "";
+        opts.label = prop.description;   
+        opts.defaultValue = prop.defaultValue;
         if (prop.name === schema.idProperty) {        
             if (prop.metadata.type === "uid" && !editMode)
                 return "";
@@ -90,6 +100,9 @@ class Context {
 
         if(prop.type === "number")
             return `<aor.NumberInput source="${prop.name}"  ${opts}/>`;
+        
+        if(prop.type === "boolean")
+            return `<aor.BooleanInput source="${prop.name}"  ${opts}/>`;
         
         return `<aor.TextInput source="${prop.name}"  ${opts}/>`;
     }
