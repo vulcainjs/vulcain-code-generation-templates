@@ -41,7 +41,7 @@ class Context {
     }
 
     getFieldComponent(prop) {
-        if (prop.custom.ignore)
+        if (prop.custom && prop.custom.ignore)
             return "";
         
         if (prop.custom && prop.custom.reference) {
@@ -65,7 +65,7 @@ class Context {
     }
 
     getInputComponent(schema, prop, editMode) {
-        if (prop.custom.ignore)
+        if (prop.custom && prop.custom.ignore)
             return "";
         
         var opts = prop.required ? " validate={[required ]}" : "";
