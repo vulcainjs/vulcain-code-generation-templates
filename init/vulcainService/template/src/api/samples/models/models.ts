@@ -5,9 +5,11 @@ import { Model, Property, Validator } from "vulcain-corejs";
 // -----------------------------------------------------------
 @Model()
 export class Customer {
+    @Property({ type: "uid", isKey: true })
+    id: string;
     @Property({ type: 'string', required: true })
-    @Validator("length", { min: 5 })
+    @Validator("length", { min: 4 })
     firstName: string;
-    @Property({ type: "string", required: true, unique: true, isKey: true })
+    @Property({ type: "string", required: true })
     lastName: string;
 }

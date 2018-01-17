@@ -6,8 +6,7 @@ import {
     CREATE,
     UPDATE,
     DELETE,
-    fetchUtils,
-    HttpError
+    fetchUtils
 } from 'admin-on-rest';
 import { stringify } from 'query-string';
 import * as Url from 'url';
@@ -31,7 +30,7 @@ export default (apiUrl = 'http://localhost:8080/api') => {
         switch (type) {
             case GET_LIST: {
                 const { page, perPage } = params.pagination;
-                const { field, order } = params.sort;
+                //const { order } = params.sort;
                 const filter = {};
                 if (params.filter) {
                     Object.keys(params.filter).forEach(k => {
@@ -91,13 +90,13 @@ export default (apiUrl = 'http://localhost:8080/api') => {
      * @returns {Object} REST response
      */
     const convertHTTPResponseToREST = (response, type, resource, params) => {
-        const { headers, json } = response;
+        const { json } = response;
 
         switch (type) {
             case GET_LIST:
                 return {
                     data: json.value,
-                    total: parseInt(json.meta.total),
+                    total: parseInt(json.meta.total, 10),
                 };
             case CREATE:
                 return { data: { ...params.data, id: json.value.id } };
