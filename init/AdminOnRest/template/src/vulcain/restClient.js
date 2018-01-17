@@ -11,12 +11,19 @@ import {
 import { stringify } from 'query-string';
 import * as Url from 'url';
 
-export default (apiUrl = 'http://localhost:8080/api') => {
+export default (urlMappings = { default: 'http://localhost:8080/api' }) => {
 
-    let url = Url.parse(apiUrl);
-    if (!url.path)
-        url.path = "/api";
-    apiUrl = Url.format(url);
+    if (typeof urlMappings === "string") {
+        urlMappings = { default: urlMappings };
+    }    
+    
+    Object.keys(urlMappings).forEach(key => {
+        let apiUrl = urlMappings[key];
+        let url = Url.parse(apiUrl);
+        if (!url.path)
+            url.path = "/api";
+        urlMappings[key] = Url.format(url);
+    });
 
     /**
      * @param {String} type One of the constants appearing at the top if this file, e.g. 'UPDATE'
@@ -25,6 +32,9 @@ export default (apiUrl = 'http://localhost:8080/api') => {
      * @returns {Object} { url, options } The HTTP request parameters
      */
     const convertRESTRequestToHTTP = (type, resource, params) => {
+        let apiUrl = urlMappings[resource] || urlMappings.default;
+        if (!apiUrl)
+            throw new Error("No url found for resource " + resource + " and no default url is defined.");
         let url = '';
         const options = {};
         switch (type) {
