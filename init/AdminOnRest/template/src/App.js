@@ -10,7 +10,7 @@ import PostIcon from 'material-ui/svg-icons/action/book';
 
 const App = () => (
     <Admin dashboard={Dashboard} restClient={vulcainRestClient('http://localhost:8080/api')} customSagas={[errorSagas]}>
-  /*  <Resource name="customer" list={aorCustomerList} edit={CustomerEdit} create={CustomerCreate} icon={UserIcon} remove={Delete} /> */
+  /*  <Resource name="customer" list={CustomerList} edit={CustomerEdit} create={CustomerCreate} icon={PostIcon} remove={Delete} /> */
     </Admin>
 );
 

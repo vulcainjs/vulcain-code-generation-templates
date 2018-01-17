@@ -12,7 +12,7 @@ import {
 import { stringify } from 'query-string';
 import * as Url from 'url';
 
-export default (apiUrl = 'http://localhost:8080/api', httpClient = fetchJson) => {
+export default (apiUrl = 'http://localhost:8080/api') => {
 
     let url = Url.parse(apiUrl);
     if (!url.path)

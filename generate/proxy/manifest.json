@@ -1,3 +1,4 @@
 {
-    "description": "Proxy class for accessing vulcain service."
+    "name": "Proxy class",
+    "description": "Proxy class for accessing vulcain service from another service."
 }

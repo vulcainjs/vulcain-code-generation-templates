@@ -143,7 +143,7 @@ class Context {
         for (let i = 1; i < parts.length; i++) {
             result += this.pascalCase(parts[i]);
         }
-        return (result + "Service").replace(/-/g, '');
+        return (result + ".Components").replace(/-/g, '');
     }
 }
 
