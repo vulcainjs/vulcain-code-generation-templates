@@ -125,7 +125,7 @@ class Context {
 
         let params = [];
         let args = "{";
-        for (let prop of schema.properties) {
+        for (let prop of schema.properties.sort((a,b)=> (b.required?1:0) - (a.required?1:0))) {
             if (params.length > 0) {
                 params.push(", ");
             }

@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "usage in the root project directory.",
   "main": "generate.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vulcainjs/vulcain-code-generation-templates.git"
@@ -13,22 +11,16 @@
   "keywords": [
     "vulcain"
   ],
-  "author": "zenasoft",
+  "author": "Alain Metge",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vulcainjs/vulcain-code-generation-templates/issues"
   },
   "homepage": "https://github.com/vulcainjs/vulcain-code-generation-templates#readme",
-  "dependencies": {
-    "ejs": "^2.5.5",
-    "glob": "^7.1.2",
-    "inquirer": "^4.0.2",
-    "rx-lite": "^4.0.8",
-    "shelljs": "^0.7.8",
-    "unirest": "^0.5.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^8.5.7",
+    "apotek": ">1.0.0-",
     "typescript": "^2.6.2"
   }
 }

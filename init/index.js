@@ -23,7 +23,7 @@ class Context {
 
     exec() {
         if (fs.existsSync(this.outputFolder)) {
-            throw new Error('Initialization aborted. Output folder already exists.');            
+            throw new Error(`Initialization aborted. Output folder ${this.outputFolder} already exists.`);            
         }
         this.context.shell.mkdir("-p", this.outputFolder);
 

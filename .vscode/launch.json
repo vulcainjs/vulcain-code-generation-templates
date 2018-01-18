@@ -9,7 +9,12 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/generate.js",
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "generate",
+                "--template",
+                "Proxy"
+            ]
         }
     ]
 }
