@@ -11,9 +11,6 @@
             "program": "${workspaceFolder}/generate.js",
             "cwd": "${workspaceFolder}",
             "args": [
-                "generate",
-                "--template",
-                "Proxy"
             ]
         }
     ]

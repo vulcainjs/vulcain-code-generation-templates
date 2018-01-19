@@ -16,3 +16,4 @@ This is the default templates repository for **Apotek**.
 apotek generate --template proxy --address <vulcain service address>
 ```
 
+You can use and fork this repository to create your own.

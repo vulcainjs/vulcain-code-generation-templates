@@ -9,7 +9,9 @@
     "url": "git+https://github.com/vulcainjs/vulcain-code-generation-templates.git"
   },
   "keywords": [
-    "vulcain"
+    "vulcain",
+    "vulcainjs",
+    "apotek"
   ],
   "author": "Alain Metge",
   "license": "MIT",

@@ -1,16 +1,16 @@
 const Path = require('path');
 const Apotek = require('apotek').default;
 
-// Specific state
-// let state = {
-//     outputFolder: Path.join(shell.pwd().toString(), "generated"),
-//     address: 'http://localhost:8080',
-//     template: "adminOnRest"
-// };
+// Use this code to test your command
+// Output folder is set to '.generated'
+
+// Initial state
 let state = {
-    template: "proxy",
-    address: 'http://localhost:8080'
+    template: "vulcainService",
+    domain: 'vulcain',
+    project: "Service1",
+    service: "Service1"
 }
 
 const apo = new Apotek();
-apo.test("generate", state);
+apo.test("init", state); // command name, state

@@ -1,0 +1,1 @@
+This folder (and other folder beginning with '$' or '.') is ignored.

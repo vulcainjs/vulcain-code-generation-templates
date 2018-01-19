@@ -3,11 +3,11 @@ const rest = require('unirest');
 
 class Context {
 
-    prompts() {
-        return [{ name: 'address', type: 'list', message: 'Select service', lookup: 'service.all' }];
+    *prompts() {
+        yield [{ name: 'address', type: 'list', message: 'Select service', lookup: 'service.all' }];
     }
 
-    init(options) {
+    exec(options) {
         let self = this;
         return new Promise((resolve, reject) => {
             try {
