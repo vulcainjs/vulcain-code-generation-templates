@@ -1,5 +1,5 @@
 const Path = require('path');
-const Apotek = require('apotek').default;
+const Pastaga = require('pastaga').default;
 
 // Use this code to test your command
 // Output folder is set to '.generated'
@@ -12,5 +12,5 @@ let state = {
     service: "Service1"
 }
 
-const apo = new Apotek();
+const apo = new Pastaga();
 apo.test("init", state); // command name, state

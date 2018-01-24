@@ -2,18 +2,18 @@
 
 Templates for [Vulcain](https://github.com/vulcainjs).
 
-You must install [Apotek](https://github.com/malain/apotek) to use this templates.
+You must install [Pastaga](https://github.com/malain/pastaga) to use this templates.
 
 ```js
-npm install -g apotek
+npm install -g pastaga
 ```
 
-This is the default templates repository for **Apotek**.
+This is the default templates repository for **Pastaga**.
 
 ## Usage
 
 ```js
-apotek generate --template proxy --address <vulcain service address>
+pastaga generate --template proxy --address <vulcain service address>
 ```
 
 You can use and fork this repository to create your own.

@@ -4,7 +4,7 @@ Simple template for using [Admin On Rest](https://marmelab.com/admin-on-rest/) w
 
 This project was initially bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-Use [Apotek](https://github.com/malain/apotek) to generate components from [vulcain](http://www.vulcainjs.org/) services.
+Use [Pastaga](https://github.com/malain/pastaga) to generate components from [vulcain](http://www.vulcainjs.org/) services.
 
 ## How to add service component
 
@@ -14,7 +14,7 @@ Use [Apotek](https://github.com/malain/apotek) to generate components from [vulc
 Example for a service running on localhost:8080
 
 ```js
-apotek generate --template adminOnRest --address http://localhost:8080
+pastaga generate --template adminOnRest --address http://localhost:8080
 ```
 
 3. In **App.js**,

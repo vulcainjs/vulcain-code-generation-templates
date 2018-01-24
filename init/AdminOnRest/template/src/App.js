@@ -6,7 +6,7 @@ import errorSagas from './vulcain/saga';
 
 import PostIcon from 'material-ui/svg-icons/action/book';
 
-// To add a new resource generated with apotek uncomment the following line and 
+// To add a new resource generated with pastaga uncomment the following line and 
 // the Resource line in the Admin component. 
 // Do not forget to update urlMappings object
 //import {CustomerCreate, CustomerEdit, CustomerList} from './service1.Components.js'
