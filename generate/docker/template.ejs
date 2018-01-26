@@ -1,22 +1,42 @@
+# Builder image - Needs docker >= 17.06
+FROM node:8-slim AS builder
+
+COPY package.json /app/
+COPY package-lock.json /app/
+
+WORKDIR /app
+RUN npm install
+
+COPY tsconfig.json /app/
+COPY src /app/src
+
+RUN npm run build
+
 # ---------------------------------------------------
 # Final image
 # ---------------------------------------------------
 FROM node:8-alpine
-ARG Source
+
+RUN apk update && apk add curl && rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 
-# Replace with the service name
 ENV VULCAIN_SERVICE_NAME=<%= state.service %>
 ENV VULCAIN_SERVICE_VERSION=<%= state.version %>
 
-HEALTHCHECK --interval=10s --timeout=1s CMD curl -f http://localhost:8080/health || exit 1
-
+HEALTHCHECK --interval=30s --timeout=1s CMD curl -f http://localhost:8080/health || exit 1
 WORKDIR /app
-COPY package.json /app
-RUN npm install
 
-COPY {Source:-$(pwd)}/*.js /app/bin/
+COPY --from=builder /app/package.json /app
+COPY --from=builder /app/lib/src /app/lib
+
+# Remove dev dependencies
+RUN npm install --only=production; cd node_modules; \
+  find . -name examples | xargs rm -fr; \
+  find . -name doc | xargs rm -fr; \
+  find . -name typings | xargs rm -fr; \
+  find . -name test | xargs rm -fr; \
+  find . -name .history | xargs rm -fr
 
 ENTRYPOINT ["node"]
-CMD ["bin/index.js"]
+CMD ["lib/index.js"]

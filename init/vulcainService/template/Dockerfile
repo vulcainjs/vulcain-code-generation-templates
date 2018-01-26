@@ -17,6 +17,8 @@ RUN npm run build
 # ---------------------------------------------------
 FROM node:8-alpine
 
+RUN apk update && apk add curl && rm -rf /var/cache/apk/*
+
 EXPOSE 8080
 
 ENV VULCAIN_SERVICE_NAME=<%= state.service %>
