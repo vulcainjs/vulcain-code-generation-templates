@@ -1,5 +1,5 @@
 import { Service, ServiceDependency, Command, IRequestContext, AbstractServiceCommand, Model,
-Property, Reference, CommandFactory, VulcainResponse } from 'vulcain-corejs';
+Property, CommandFactory, VulcainResponse } from 'vulcain-corejs';
 
 //
 // Code generated with pastaga (https://github.com/malain/pastaga)
@@ -18,11 +18,7 @@ export class <%= model.name %> {
     * <%= prop.description  || '.' %>
     */
     <%_ }
-    if(prop.reference) { -%>
-    @Reference(<%- JSON.stringify(prop.metadata) %>)
-    <%_ } else { -%>
     @Property(<%- JSON.stringify(prop.metadata) %>)
-    <%_ } -%>
     <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
 <%_ } -%>
 }
