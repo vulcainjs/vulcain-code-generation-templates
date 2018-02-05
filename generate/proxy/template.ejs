@@ -18,7 +18,7 @@ export class <%= model.name %> {
     * <%= prop.description  || '.' %>
     */
     <%_ } -%>
-    @Property(<%- JSON.stringify(prop.metadata) %>)
+    @Property(<%- JSON.stringify(prop.definition) %>)
     <%= prop.name%><%= required(prop)%>: <%= resolveType(prop.type) %>;
 <%_ } -%>
 }
