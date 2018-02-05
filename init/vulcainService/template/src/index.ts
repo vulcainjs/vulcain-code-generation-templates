@@ -6,5 +6,5 @@ const domain = "<%=state.domain %>";
 // Default configuration
 let port = 8080;
 
-let builder = new Application(domain);
-builder.start(port);
+let app = new Application(domain);
+app.start(port);
