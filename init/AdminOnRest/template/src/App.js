@@ -19,7 +19,7 @@ const urlMappings = {
 
 const App = () => (
   <Admin dashboard={Dashboard} restClient={vulcainRestClient(urlMappings)} customSagas={[errorSagas]}>
-  /*  <Resource name="customer" list={CustomerList} edit={CustomerEdit} create={CustomerCreate} icon={PostIcon} remove={Delete} /> */
+    {/*  <Resource name="customer" list={CustomerList} edit={CustomerEdit} create={CustomerCreate} icon={PostIcon} remove={Delete} /> */}
     </Admin>
 );
 

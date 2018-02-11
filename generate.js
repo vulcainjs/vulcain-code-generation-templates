@@ -6,7 +6,7 @@ const Pastaga = require('pastaga').default;
 
 // Initial state
 let state = {
-    template: "proxy",
+    template: "adminOnRest",
     domain: 'vulcain',
     address: "http://localhost:8080"
 }

@@ -41,18 +41,18 @@ class Context {
     }
 
     getFieldComponent(prop) {
-        if (prop.custom && prop.custom.ignore)
+        if (prop.definition.aor && prop.definition.aor.ignore)
             return "";
         
-        if (prop.custom && prop.custom.reference) {
-            return `<aor.ReferenceField label="${prop.custom.reference}" source="${prop.name}" reference="${prop.custom.reference}">
-                <aor.TextField source="${prop.custom.referenceField}" />
+        if (prop.reference) {
+            return `<aor.ReferenceField label="${prop.reference}" source="${prop.name}" reference="${prop.reference}">
+                <aor.TextField source="${prop.definition.referenceField}" />
             </aor.ReferenceField>`;
         }
-        if (prop.metadata.type === "enum") {
+        if (prop.definition.type === "enum") {
             return `<aor.ChipField source="${prop.name}" />`;            
         }
-        if (prop.metadata.type === "date") {
+        if (prop.definition.type === "date") {
             return `<aor.DateField source="${prop.name}" />`;            
         }
         if(prop.type === "boolean")
@@ -65,7 +65,7 @@ class Context {
     }
 
     getInputComponent(schema, prop, editMode) {
-        if (prop.custom && prop.custom.ignore)
+        if (prop.definition.aor && prop.definition.aor.ignore)
             return "";
         
         var opts = prop.required ? " validate={[required ]}" : "";
@@ -75,29 +75,29 @@ class Context {
             opts.defaultValue += " " + prop.defaultValue;
         
         if (prop.name === schema.idProperty) {        
-            if (prop.metadata.type === "uid" && !editMode)
+            if (prop.definition.type === "uid" && !editMode)
                 return "";
             
             if(editMode) return `<aor.DisabledInput source="${prop.name}" ${opts}/>`;
         } 
 
-        if (prop.custom && prop.custom.reference) {
-            var html = `<aor.ReferenceInput label="${prop.custom.reference}" source="${prop.name}" 
-                    reference="${prop.custom.reference}" allowEmpty `;
-            if (prop.custom.referenceFilter) {
-                html += `filter={${JSON.stringify(prop.custom.referenceFilter)}}`
+        if (prop.reference) {
+            var html = `<aor.ReferenceInput label="${prop.reference}" source="${prop.name}" 
+                    reference="${prop.reference}" allowEmpty `;
+            if (prop.definition.aor && prop.definition.aor.filter) {
+                html += `filter={${JSON.stringify(prop.definition.aor.filter)}}`
             }
             html += `>
-                <aor.SelectInput source="${prop.custom.referenceField}" />
+                <aor.SelectInput source="${prop.definition.referenceField}" />
             </aor.ReferenceInput>`;
             return html;
         }
-        if (prop.metadata.type === "enum" && prop.metadata.values) {
-            let choices = prop.metadata.values.map(c => { return { id: c, name: c }; });
-            return `<${prop.metadata.values.length > 5 ? "aor.SelectInput" : "aor.RadioButtonGroupInput"} source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
+        if (prop.definition.type === "enum" && prop.definition.values) {
+            let choices = prop.definition.values.map(c => { return { id: c, name: c }; });
+            return `<${prop.definition.values.length > 5 ? "aor.SelectInput" : "aor.RadioButtonGroupInput"} source="${prop.name}" choices={${JSON.stringify(choices)}} />`;            
         }
 
-        if (prop.metadata.type === "date-iso8601") {
+        if (prop.definition.type === "date-iso8601") {
             return `<aor.DateInput source="${prop.name}" />`;            
         }
 
