@@ -77,7 +77,6 @@ class Context {
         return prefix + suffix;
     }   
     
-    // name = schema.action or action
     normalizeMethod(name, prefix) {
         let [schema, action] = name.split('.');
         
@@ -102,7 +101,7 @@ class Context {
         let schemaName = method.inputSchema;
         if (!schemaName) {
             let params = [];
-            if (method.action === "all")
+            if (method.name === "all")
                 params.push({ type: "any", name: "query", description: "Query filter" });
             return params;
         }
@@ -119,10 +118,6 @@ class Context {
             return { params: [], args: "null" };
         }
         let schema = this.state.schemas.find(s => s.name === schemaName);
-        if (!schema) { // get
-            return { params: ["id: string"], args: "null" };
-        }
-
         let params = [];
         let args = "{";
         for (let prop of schema.properties.sort((a,b)=> (b.required?1:0) - (a.required?1:0))) {
@@ -130,10 +125,8 @@ class Context {
                 params.push(", ");
             }
  
-            params.push(prop.name + this.required(prop) + ": " + prop.type);
-            if (prop.name === "id" && method.kind === "get")
-                continue;
-            
+            let propType = this.resolveType(prop.type);
+            params.push(prop.name + this.required(prop) + ": " + propType);            
             if (args.length > 1) {
                 args += ", ";
             }
@@ -141,10 +134,14 @@ class Context {
         }
         args += "}";
 
-        if (params.length > 0) {
-            params.push(", ");
-        }
         return { params, args };
+    }
+
+    resolveType(propType) {
+        if( !this.state.schemas.find(s=>s.name===propType) && ["string", "number", "boolean"].indexOf(propType) < 0) {
+            return propType === "id" ? "string|number" : "any";
+        }
+        return propType;
     }
 }
 

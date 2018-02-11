@@ -1,12 +1,8 @@
 import { Service, ServiceDependency, Command, IRequestContext, AbstractServiceCommand, Model,
-Property, Reference, CommandFactory, VulcainResponse } from 'vulcain-corejs';
+Property, CommandFactory, VulcainResponse } from 'vulcain-corejs';
 
-// ==============================================================
-//
+// Proxy class for vulcain service
 // Code generated with pastaga (https://github.com/malain/pastaga)
-// 
-// ==============================================================
-
 
 // ==============================================================
 // Models
@@ -30,13 +26,9 @@ export class <%= model.name %> <%=extendsStmt%> {
     /**
     * <%= prop.description  %>
     */
-    <%_ }
-    if(prop.reference) { -%>
-    @Reference(<%- JSON.stringify(prop.metadata) %>)
-    <%_ } else { -%>
-    @Property(<%- JSON.stringify(prop.metadata) %>)
     <%_ } -%>
-    <%= prop.name%><%= required(prop)%>: <%= prop.type %>;
+    @Property(<%- JSON.stringify(prop.definition) %>)
+    <%= prop.name%><%= required(prop)%>: <%= resolveType(prop.type) %>;
 <%_ } -%>
 }
 <%_ } -%>
@@ -68,8 +60,9 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
         }
     }
 <%_ for(let method of state.services) {
-    if(method.verb[0] == "_")
+    if(method.verb[0] === "_")
         continue;
+
     let p = arguments(method);
     if( method.kind == "action") { -%>
 
@@ -81,7 +74,7 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params [optional] args - additional url parameters
     */
 <%_ if( method.inputSchema) { -%>
-    async <%=normalizeMethod(method.verb)%>(<%=p.params.join('')%> args?) {
+    async <%=normalizeMethod(method.verb)%>(<%=p.params.join('')%><%= p.params.length>0?",":"" %> args?) {
         const $data = <%=p.args%>;
         return this.<%=normalizeMethod(method.verb)%>Entity($data, args);
     }
@@ -91,11 +84,12 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     * @params {<%= method.inputSchema %>} entity -
     * @params [optional] args - additional url parameters
     */
-    async <%=normalizeMethod(method.verb)%>Entity(data: <%= method.inputSchema %>, args?): Promise<VulcainResponse<<%=method.outputSchema||"any"%>>> {
+    async <%=normalizeMethod(method.verb)%>Entity(data: <%= method.inputSchema %><%= p.params.length>0?",":"" %> args?): Promise<VulcainResponse<<%=method.outputSchema||"any"%>>> {
         let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb) + "Command" %>');
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execAction<<%=method.outputSchema||"any"%>>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -107,12 +101,13 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
         return response;
     }
 <%_ } else { -%>
-    async <%=normalizeMethod(method.verb)%>(<%=p.params.join('')%> args?): Promise<VulcainResponse<<%=method.outputSchema||"any"%>>> {
+    async <%=normalizeMethod(method.verb)%>(<%=p.params.join('')%><%= p.params.length>0?",":"" %> args?): Promise<VulcainResponse<<%=method.outputSchema||"any"%>>> {
         const $data = <%=p.args%>;
         let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb) + "Command" %>');
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execAction<<%=method.outputSchema||"any"%>>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -136,6 +131,7 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execGet<<%=method.outputSchema||"any"%>>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -145,9 +141,7 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
         );
         return response;
     }
-
-    <% } else if(method.kind === "query" && method.action === "all") { -%>
-
+    <% } else if(method.kind === "query" && method.name === "all") { -%>
     /**
     * <%= method.description || "Get all" %>
     <%_ for(let p of getInputProperties(method)) { -%>
@@ -155,13 +149,14 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
     <%_ } -%>
     * @params [optional] query - filter query
     * @params {number} page - Page to retrieve
-    * @params {number} maxByPage - Item by page (default 100)
+    * @params {number} pageSize - Item by page (default 100)
     */
-    async <%=normalizeMethod(method.verb, 'getAll')%>(<%= p.params.join('')%> query?, page?: number, maxByPage?: number): Promise<VulcainResponse<<%=method.outputSchema||"any"%>[]>> {
+    async <%=normalizeMethod(method.verb, 'getAll')%>(<%= p.params.join('')%><%= p.params.length>0?",":"" %> query?, page?: number, pageSize?: number): Promise<VulcainResponse<<%=method.outputSchema||"any"%>[]>> {
         let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'GetAll') + "Command" %>');
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execQuery<<%=method.outputSchema||"any"%>[]>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -170,7 +165,7 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
             query, 
             <%=p.args%>, 
             page, 
-            maxByPage
+            pageSize
         );
         return response;
     }
@@ -185,11 +180,12 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
 <%_ if(method.outputType === "one") { -%> 
     * @params [optional] args - additional url parameters
     */
-    async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%> args?) {
+    async <%=normalizeMethod(method.verb, 'get')%><T>(<%= p.params.join('')%><%= p.params.length>0?",":"" %> args?) {
         let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execGet<<%=method.outputSchema||"any"%>>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -202,13 +198,14 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
 
 <%_ } else { -%>           
     * @params {number} page - Page to retrieve
-    * @params {number} maxByPage - Item by page (default 100)
+    * @params {number} pageSize - Item by page (default 20)
     */
-    async <%=normalizeMethod(method.verb, 'all')%>(<%= p.params.join('')%> page?: number, maxByPage?: number) {
+    async <%=normalizeMethod(method.verb, 'all')%>(<%= p.params.join('')%><%= p.params.length > 0 ?",":"" %> page?: number, pageSize?: number) {
         let command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=createSpecificCommandName(state.serviceName, method.verb, 'Get') + "Command" %>');
         if( !command ) {
             command = CommandFactory.createCommand<<%=normalizeService(state.serviceName) + "Command" %>>(this.context, '<%=normalizeService(state.serviceName) + "Command" %>');
         }
+
         const response = await command.execQuery<<%=method.outputSchema||"any"%>[]>(
             <%= normalizeService(state.serviceName) %>Proxy.serviceName, 
             <%= normalizeService(state.serviceName) %>Proxy.serviceVersion, 
@@ -217,7 +214,7 @@ export class <%= normalizeService(state.serviceName) %>Proxy {
             <%=p.args%>, 
             null,
             page, 
-            maxByPage
+            pageSize
         );
         return response;
     }
