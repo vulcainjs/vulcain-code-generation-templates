@@ -6,11 +6,10 @@ const Pastaga = require('pastaga').default;
 
 // Initial state
 let state = {
-    template: "vulcainService",
+    template: "proxy",
     domain: 'vulcain',
-    project: "Service1",
-    service: "Service1"
+    address: "http://localhost:8080"
 }
 
 const apo = new Pastaga();
-apo.test("init", state); // command name, state
+apo.test("generate", state); // command name, state
