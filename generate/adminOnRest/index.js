@@ -46,7 +46,7 @@ class Context {
         
         if (prop.reference) {
             return `<aor.ReferenceField label="${prop.reference}" source="${prop.name}" reference="${prop.reference}">
-                <aor.TextField source="${prop.definition.referenceField}" />
+                <aor.TextField source="${prop.definition.referenceProperty || "id"}" />
             </aor.ReferenceField>`;
         }
         if (prop.definition.type === "enum") {
@@ -88,7 +88,7 @@ class Context {
                 html += `filter={${JSON.stringify(prop.definition.aor.filter)}}`
             }
             html += `>
-                <aor.SelectInput source="${prop.definition.referenceField}" />
+                <aor.SelectInput source="${prop.definition.referenceProperty || "id"}" />
             </aor.ReferenceInput>`;
             return html;
         }

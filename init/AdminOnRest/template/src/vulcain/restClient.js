@@ -47,11 +47,11 @@ export default (urlMappings = { default: 'http://localhost:8080/api' }) => {
                         filter[k] = { "$regex": params.filter[k], $options: "i" };
                     });
                 }
-                url = `${apiUrl}/${resource}.all?$page=${page - 1}&$maxByPage=${perPage}&$query=${JSON.stringify(filter)}`;
+                url = `${apiUrl}/${resource}.all?$page=${page - 1}&$pageSize=${perPage}&$query=${JSON.stringify(filter)}`;
                 break;
             }
             case GET_ONE:
-                url = `${apiUrl}/${resource}.get/${params.id}`;
+                url = `${apiUrl}/${resource}.get?id=${params.id}`;
                 break;
             case GET_MANY: {
                 const query = {
@@ -106,7 +106,7 @@ export default (urlMappings = { default: 'http://localhost:8080/api' }) => {
             case GET_LIST:
                 return {
                     data: json.value,
-                    total: parseInt(json.meta.total, 10),
+                    total: parseInt(json.meta.totalCount, 10),
                 };
             case CREATE:
                 return { data: { ...params.data, id: json.value.id } };
