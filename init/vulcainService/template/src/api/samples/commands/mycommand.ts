@@ -16,7 +16,7 @@ export class MyCommand extends AbstractHttpCommand  {
     }
 
     // Execute command
-    async exec(a: number) {
+    async run(a: number) {
         let response = await this.get("http://jsonplaceholder.typicode.com/posts/" + a);
         return response.body.title;
     }

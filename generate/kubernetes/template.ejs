@@ -26,13 +26,23 @@ spec:
         - image: <%= state.image %>
           name: <%= state.service %>
           livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
+            exec:
+              command:
+              - cat 
+              - /app/service.live
             initialDelaySeconds: 3
             timeoutSeconds: 1
-            periodSeconds: 10
+            periodSeconds: 5
             failureThreshold: 1
+          livenessReady:
+            exec:
+              command:
+              - cat 
+              - /app/service.ready
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            failureThreshold: 1            
           ports:
             - containerPort: 8080
               name: http

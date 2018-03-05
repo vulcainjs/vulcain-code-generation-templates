@@ -18,8 +18,8 @@ export class CustomerActionHandler extends DefaultActionHandler {
         let customerList = await this.customers.getAll();
 
         // Using a command
-        const cmd = CommandFactory.createCommand<MyCommand>(this.context, "MyCommand");
-        return cmd.exec(1);
+        const cmd = new MyCommand(this.context);
+        return cmd.run(1);
     }
 }
 
