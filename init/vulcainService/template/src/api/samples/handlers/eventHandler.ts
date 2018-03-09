@@ -1,6 +1,5 @@
 import { EventHandler, Consume, AbstractEventHandler, EventData, Service } from "vulcain-corejs";
 import { Customer } from "../models/models";
-import { MyCommand } from "../commands/mycommand";
 
 @EventHandler({ schema: "Customer", subscribeToDomain: Service.domainName })
 export class CustomerEventHandler extends AbstractEventHandler {

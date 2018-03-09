@@ -1,5 +1,5 @@
 import {
-    Service, IDynamicProperty, DynamicConfiguration, Command, HttpDependency, AbstractHttpCommand, Inject, IContainer,
+    Service, IDynamicProperty, DynamicConfiguration, Command, HttpDependency, AbstractHttpCommand, Inject, IRequestContext,
     DefaultServiceNames, ConfigurationProperty
 } from "vulcain-corejs";
 
@@ -9,14 +9,14 @@ export class MyCommand extends AbstractHttpCommand  {
     @ConfigurationProperty("test", "string")
     private myvalue: IDynamicProperty<string>;
 
-    constructor( @Inject(DefaultServiceNames.Container) container: IContainer) {
-        super(container);
+    constructor(context: IRequestContext ) {
+        super(context);
         // Create a custom service dynamic property
         this.myvalue = DynamicConfiguration.getChainedConfigurationProperty<string>("test", "<nothing>");
     }
 
     // Execute command
-    async exec(a: number) {
+    async run(a: number) {
         let response = await this.get("http://jsonplaceholder.typicode.com/posts/" + a);
         return response.body.title;
     }
