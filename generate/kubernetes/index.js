@@ -6,10 +6,10 @@ class Context {
     }
 
     exec() {
-        this.state.fullName =  (this.state.service + this.state.version).replace(/[\.-]/g, '').toLowerCase();
+        this.state.fullServiceName =  (this.state.service + this.state.version).replace(/[\.-]/g, '').toLowerCase();
 
         if (!this.state.image) {
-            this.state.image = this.state.fullName;
+            this.state.image = this.state.fullServiceName;
         }
         return "service.yaml";
     }
