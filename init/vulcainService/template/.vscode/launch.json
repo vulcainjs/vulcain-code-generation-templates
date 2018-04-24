@@ -26,6 +26,7 @@
             "request": "launch",
             "smartStep": true,
             "name": "Tests",
+            "preLaunchTask": "build",            
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
                 "-u",
